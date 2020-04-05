@@ -32,7 +32,7 @@ print("Type:", type(1+2j))
 print("------------------------------")
 
 # Note: Any operation performed between an int and a float always evaluate a float
-print(5, "+", 6.0, ":", 5 + 6.0)
+print("5 + 6.0 =", 5 + 6.0)
 
 
 """
