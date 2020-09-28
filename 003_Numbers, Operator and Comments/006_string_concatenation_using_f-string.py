@@ -8,7 +8,7 @@
 
 
 
-""" Program to demonstrate string concatenation using f-string Python3 """
+""" Program to demonstrate string concatenation using f-string """
 
 # String concatenation using f-string
 # From, Python 3.6+ we can use f-string for string concatenation

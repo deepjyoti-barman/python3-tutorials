@@ -8,7 +8,7 @@
 
 
 
-""" Program to demonstrate string concatenation using addition (+) operator in Python3 """
+""" Program to demonstrate string concatenation using addition (+) operator """
 
 # String concatenation using '+' operator
 print("Hello" + ", World!")

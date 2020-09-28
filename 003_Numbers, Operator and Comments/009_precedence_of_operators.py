@@ -8,7 +8,7 @@
 
 
 
-""" Program to demonstrate the order precedence of arithmetic operators in Python3 """
+""" Program to demonstrate the order precedence of arithmetic operators """
 
 # Highest precedence at top, lowest at bottom
 # Operators in the same level has evaluate Left to Right

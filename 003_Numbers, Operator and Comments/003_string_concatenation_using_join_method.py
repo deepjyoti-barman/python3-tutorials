@@ -8,7 +8,7 @@
 
 
 
-""" Program to demonstrate string concatenation using join() method in Python3 """
+""" Program to demonstrate string concatenation using join() method """
 
 # String concatenation using join() method
 # Syntax: "<delimiter>".join([str1, str2, str3, ..., strN])

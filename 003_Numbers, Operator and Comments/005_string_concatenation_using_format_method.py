@@ -8,7 +8,7 @@
 
 
 
-""" Program to demonstrate string concatenation using format() method in Python3 """
+""" Program to demonstrate string concatenation using format() method """
 
 # String concatenation using format() method
 # Usage - 1

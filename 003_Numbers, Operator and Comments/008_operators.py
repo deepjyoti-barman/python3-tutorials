@@ -8,7 +8,7 @@
 
 
 
-""" Program to demonstrate the arithmetic operators available in Python3 """
+""" Program to demonstrate the arithmetic operators available """
 
 # There are 7 different arithmetic operators in Python3
 # Addition Operator: +

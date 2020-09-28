@@ -8,7 +8,7 @@
 
 
 
-""" Program to demonstrate the numeric types available in Python3 """
+""" Program to demonstrate the numeric types available """
 
 # There are three different numeric types available in Python 3.8.2 [https://docs.python.org/3/library/stdtypes.html]
 # int (plain integers): int represent positive or negative whole numbers

@@ -1,4 +1,4 @@
-## Installation Steps for Python3
+## Python Installation
 
 - Depending on the platform or operating system you are using go the links given below
   - [Windows](https://www.python.org/downloads/windows/ "Python3 Download for Windows")
@@ -26,4 +26,9 @@
   ```
    This will open up the Python Interactive Shell also known as REPL (Read, Evaluate, Print and Loop). Essentially it is a place to type code in Python and it is mainly used to debugging purposes. (NOTE: to get out of the REPL you can either press ```Ctrl + D``` (on Mac) / ```Ctrl + Z``` (on Windows) or type in ```exit()``` or even ```quit()``` and press the ```Enter``` key on keyboard).
 - NOTE: Whenever you type in something or perform any operation into Python Interactive Shell or REPL, it will automatically print out the result. But, in usual Python scripts you need to use print() function in order to print out the result or anything of your choice.
+
+## Editor Installation (Visual Studio Code)
+
+- Go to the following link and download the latest version of Visual Studio Code (VSCode) available for your system (32-bit) or (64-bit)
   
+  - [Visual Studio Code Installer](https://code.visualstudio.com/download)

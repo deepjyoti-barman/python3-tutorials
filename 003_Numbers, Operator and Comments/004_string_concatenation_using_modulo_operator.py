@@ -8,7 +8,7 @@
 
 
 
-""" Program to demonstrate string concatenation using modulo operator (%) in Python3 """
+""" Program to demonstrate string concatenation using modulo operator (%) """
 
 # String concatenation using '%' operator
 # Format specifiers: %d = integer, %f = float, %s = string literal

@@ -1,6 +1,3 @@
-# VSCode workspace config file
-python3-tutorials.code-workspace
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

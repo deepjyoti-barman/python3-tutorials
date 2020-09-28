@@ -8,7 +8,7 @@
 
 
 
-""" Program to demonstrate string concatenation using comma (,) operator in Python3 """
+""" Program to demonstrate string concatenation using comma (,) operator """
 
 # String concatenation using ',' operator with default delimiter as ' ' (one empty space)
 print("I", "love", "my", "India")
