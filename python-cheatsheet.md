@@ -65,8 +65,10 @@ print('Hello World')
     - dict
   - Boolean Type:
     - bool
-  - Binary Type:
-    - bytes, bytearray, memoryview
+  - Binary Types:
+    - bytes
+    - bytearray
+    - memoryview
 
 ### Numeric Types
 
@@ -276,7 +278,7 @@ print(str1.lower())                     # you are awesome
 print(str1.title())                     # You Are Awesome
 ```
 
-### Sequence Type - List
+### Sequence Type - list
 
 ```python
 lst = [10, 20, 'Deepjyoti', -50, 80, 48.9]
@@ -335,12 +337,36 @@ print(lst)                              # [5, 10, 20, 48.9, 77, 80]
 lst.sort(reverse=True)
 print(lst)                              # [80, 77, 48.9, 20, 10, 5]
 
+# reverse a list
+lst.reverse()                           # [5, 10, 20, 48.9, 77, 80]
+
+# add multiple elements in a list at the end
+lst.extend([90, 99])                    # [5, 10, 20, 48.9, 77, 80, 90, 99]
+
+# creating a deep copy of a list
+lst2 = lst
+print(lst)                              # [5, 10, 20, 48.9, 77, 80, 90, 99]
+print(lst2)                             # [5, 10, 20, 48.9, 77, 80, 90, 99]
+
+lst.remove(5)
+print(lst)                              # [10, 20, 48.9, 77, 80, 90, 99]
+print(lst2)                             # [10, 20, 48.9, 77, 80, 90, 99]
+
+# creating a shallow copy of a list
+lst3 = lst.copy()
+print(lst)                              # [10, 20, 48.9, 77, 80, 90, 99]
+print(lst3)                             # [10, 20, 48.9, 77, 80, 90, 99]
+
+lst.remove(48.9)
+print(lst)                              # [10, 20, 77, 80, 90, 99]
+print(lst3)                             # [10, 20, 48.9, 77, 80, 90, 99]
+
 # remove all the elements present in a list
 lst.clear()
 print(lst)                              # []
 ```
 
-### Sequence Type - Tuple
+### Sequence Type - tuple
 
 - Tuple is just like a List data-structure, but it is immutable / read-only (i.e. once we create a tuple we can't modify it).
 - A tuple maintains the insertion order.
@@ -386,10 +412,246 @@ print(tpl)                              # 20, 30, 20, 'xyz')
 print(type(tpl))                        # <class 'tuple'>
 ```
 
-### List vs Tuple
+### list vs tuple
 
 - List uses square brackets to wrap a list of elements, whereas tuple uses parenthesis.
 - For a list using square brackets are mandatory, whereas for a tuple its optional to use a pair of parenthesis.
 - List is mutable, whereas tuple is immutable.
 - List should be used in situations where we need to do manipulations on the elements, tuple should be used where consistency of the elements are mandatory.
 - A list cannot be used as a key to the dictionary, because a dictionary key should be hashable and immutable, since tuple is immutable we can use tuple as a key to the dictionary.
+
+### Set Types - set and frozenset
+
+- The set sequence type does not allow duplicates.
+- Set does not maintain any order of its elements.
+- We cannot perform indexing, slicing or repetition on a set.
+- A frozenset does not allow add, update or remove operation in a set.
+- A set supports multiple other methods like union(), intersection(), difference(), isdisjoint(), issubset(), issuperset() etc.
+
+```python
+st = {10, 20, 30, 'xyz', 10, 20, 10}
+print(st)                               # {'xyz', 10, 20, 30}
+print(type(st))                         # <class 'set'>
+
+# adding a new element into the set
+st.add(5)
+print(st)                               # {5, 10, 'xyz', 20, 30}
+
+# adding multiple new elements to a set
+st.update([88, 99])                     
+print(st)                               # {99, 5, 10, 'xyz', 20, 88, 30}
+
+# print(st[2])                          # TypeError: 'set' object does not support indexing
+# print(st[0:5])                        # TypeError: 'set' object is not subscriptable
+# print(st * 3)                         # TypeError: unsupported operand type(s) *: 'set' and 'int'
+
+# removing element from a set
+st.remove(99)                           
+print(st)                               # {5, 10, 'xyz', 20, 88, 30}
+# st.remove(45)                         # KeyError
+
+# removing an element from a set if it is a member
+st.discard(45)
+print(st)                               # {5, 10, 'xyz', 20, 88, 30}
+st.discard(88)
+print(st)                               # {5, 10, 'xyz', 20, 30}
+
+# removing an arbitrary element from the set
+element = st.pop()
+print(element)                          # 5
+print(st)                               # {10, 'xyz', 20, 30}
+
+# creating a shallow copy of a set
+st2 = st.copy()
+st.remove(30)
+print(st)                               # {10, 'xyz', 20}
+print(st2)                              # {'xyz', 10, 20, 30}
+
+# INTERSECTION
+st3 = st.intersection(st2)
+print(st3)                              # {'xyz', 10, 20}
+
+# DIFFERENCE
+st3 = st2.difference(st)
+print(st3)                              # {30}
+
+# verify if another set contains this set
+is_subset = st.issubset(st2)
+print(is_subset)                        # True
+
+# verify if this set contains another set
+is_superset = st2.issuperset(st)
+print(is_superset)                      # True
+
+# removing all the elements from a set
+st.clear()
+print(st)                               # set()
+
+fs = frozenset(st)
+# fs.update([20])                       # AttributeError: 'frozenset' object has no attribute 'update'
+# fs.remove(20)                         # AttributeError: 'frozenset' object has no attribute 'remove'       
+```
+
+### Sequence Type - range
+
+```python
+# syntax: range(<start_value>, end_value, <step>)
+# range with only one argument
+r = range(5)
+print(r)                                # range(0, 5)
+
+for i in r:
+    print(i, end=' ')                   # 0 1 2 3 4 
+
+# range with two arguments
+r = range(1, 6)
+
+for i in r:
+    print(i, end=' ')                   # 1 2 3 4 5 
+
+# range with three arguments
+r = range(1, 15, 3)
+
+for i in r:
+    print(i, end=' ')                   # 1 4 7 10 13 
+```
+
+### Binary Types - bytes and bytearray
+
+- The maximum we can provide to a byte is 255.
+- We cannot perform addition, modification or deletion operation in a bytes data type.
+- We can perform addition, modification or deletion operation in a bytearray data type.
+- No slicing or repetition is allowed on bytes or bytearray data types.
+- Some important methods for bytes data type: count(), endswith(), find(), index(), join(), lower(), partition(), replace(), split(), startswith(), strip(), title(), upper()
+- Some important methods for bytearray data type: append(), clear(), copy(), count(), endswith(), find(), index(), insert(), join(), lower(), partition(), pop(), remove(), replace(), reverse(), split(), strip(), title(), upper().
+
+```python
+lst = [20, 30, 40, 234]
+print(type(lst))                        # <class 'list'>
+
+b = bytes(lst)
+print(b)                                # b'\x14\x1e(\xea'
+print(type(b))                          # <class 'bytes'>
+
+# b[3] = 22                             # TypeError: 'bytes' object does not support item assignment
+
+b1 = bytearray(lst)
+print(b1)                               # bytearray(b'\x14\x1e(\xea')
+print(type(b1))                         # <class 'bytearray'> 
+
+b1[3] = 22                              # No error
+```
+
+### Mapping Type - dict
+
+- The dict data type stores data in the form of key-value pair.
+- The key and value both can be of any type.
+- If same key is present two or more times then only the last value assigned to that key will be considered.
+
+```python
+dict1 = {
+    1 : "john",
+    2 : "bob",
+    3 : "bill"
+}
+print(dict1)                            # {1: 'john', 2: 'bob', 3: 'bill'}
+print(type(dict1))                      # <class 'dict'>
+
+# accessing all the key-value pairs of the dictionary
+kv_pairs = dict1.items()
+print(kv_pairs)                         # dict_items([(1, 'john'), (2, 'bob'), (3, 'bill')])
+
+# accessing all the keys of the dictionary
+# keys() method only returns unique set of keys without any duplicates
+k = dict1.keys()
+print(k)                                # dict_keys([1, 2, 3])
+
+for i in k:
+    print(i, end=' ')                   # 1 2 3 
+
+# accessing all the values of the dictionary
+v = dict1.values()
+print(v)                                # dict_values(['john', 'bob', 'bill'])
+
+for i in v:
+    print(i, end=' ')                   # john bob bill 
+
+# accessing one value at time by key
+print(dict1[2])                         # bob
+
+# get the value for the key if the key is present in the dictionary else get None
+value = dict1.get(4)
+print(value)                            # None
+
+value = dict1.get(3)
+print(value)                            # bill
+
+# create a new dictionary taking keys from the given iterable (list, tuple, set, range, map etc)
+dict2 = dict1.fromkeys(range(5), 'dj')
+print(dict2)                            # {0: 'dj', 1: 'dj', 2: 'dj', 3: 'dj', 4: 'dj'}
+
+# same can be done using dict class
+dict3 = dict.fromkeys(dict1)
+print(dict3)                            # {1: None, 2: None, 3: None}
+
+# insert key with a value (set to None when not given) if the key is not present and return the new value
+# if the key is present return the value of the respective key
+v1 = dict1.setdefault(4)
+print(v1)                               # None
+print(dict1)                            # {1: 'john', 2: 'bob', 3: 'bill', 4: None}
+
+v2 = dict1.setdefault(5, 'mickey')
+print(v2)                               # mickey
+print(dict1)                            # {1: 'john', 2: 'bob', 3: 'bill', 4: None, 5: 'mickey'}
+
+v3 = dict1.setdefault(3)
+print(v3)                               # bill
+print(dict1)                            # {1: 'john', 2: 'bob', 3: 'bill', 4: None, 5: 'mickey'}
+
+dict1 = {
+    1 : "john",
+    2 : "bob",
+    3 : "bill"
+}
+
+# update the dictionary with the elements from another dictionary object or from an iterable of key/value pairs
+# if the given key is present update the value for the key in the dictionary
+# if the given key is not present insert the key-value pair in the dictionary
+dict1.update({1 : 'richard' })
+print(dict1)                            # {1: 'richard', 2: 'bob', 3: 'bill'}
+
+dict1.update({4 : 'peter'})
+print(dict1)                            # {1: 'richard', 2: 'bob', 3: 'bill', 4: 'peter'}
+
+# given a key remove the key-value pair from the dictionary and return the value
+# throws KeyError if the key does not exist
+val = dict1.pop(2)
+print(val)                              # bob
+print(dict1)                            # {1: 'richard', 3: 'bill', 4: 'peter'}
+
+# remove and return a key-value pair as a tuple
+# usually removes the last key-value pair
+# throws KeyError when the dictionary is empty are we are calling this method to pop out a key-value pair
+val = dict1.popitem()
+print(val)                              # (4, 'peter')
+print(type(val))                        # <class 'tuple'>
+print(dict1)                            # {1: 'richard', 3: 'bill'}
+
+dict1 = {
+    1 : "john",
+    2 : "bob",
+    3 : "bill"
+}
+
+# removing a key-value pair from the dictionary
+# throws KeyError if the key is not present in the dictionary
+del(dict1[2])
+print(dict1)                            # {1: 'john', 3: 'bill'}
+
+del dict1[3]
+print(dict1)                            # {1: 'john'}
+
+# removing all the key-value pairs from the dictionary
+dict1.clear()
+print(dict1)                            # {}
+```
