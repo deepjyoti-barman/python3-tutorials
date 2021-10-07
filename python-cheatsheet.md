@@ -655,3 +655,27 @@ print(dict1)                            # {1: 'john'}
 dict1.clear()
 print(dict1)                            # {}
 ```
+
+### Immutability in Python
+
+- When we define a variable in Python `a = 10` the PVM or Python Virtual Machine will store and allocate the memory for this value and the variable `a` will point to it. When we again declare a variable `b = 10`, PVM will first check if the value `10` is stored somewhere else in any memory location. If the memory location is found then PVM will not allocate new memory for the value `10` instead variable `b` will point to the same memory location pointed by variable `a`, saving us space. If we reassign a new value `b = 14` in this case PVM will store and allocate memory in a new location for this value and variable `b` will not point to it. This process is called immutability, where we cannot change the value in an existing memory location, instead a new memory location will be created whenever needed and the variable will point to that.
+- Unlike Java, all the data types (object types + primitive types) in Python are immutable, whereas in Java only String object type is immutable.
+
+```python
+a = 10
+b = 10
+
+# retrieving the memory location of a
+print(id(a))                            # 4353423952
+
+# retrieving the memory location of b
+print(id(b))                            # 4353423952
+
+# comparing a and b by reference
+print(a is b)                           # True
+
+b = 20
+print(id(b))                            # 4353424272
+print(a is b)                           # False
+
+```
