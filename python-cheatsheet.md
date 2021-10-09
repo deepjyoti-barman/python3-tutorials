@@ -293,9 +293,52 @@ print(str3.lower())                     # winner winner! chicken dinner
 print(str3.casefold()                   # winner winner! chicken dinner
 print(str3.title())                     # You Are Awesome
 print(str3.capitalize())                # Winner winner! chicken dinner
+print(str3.swapcase())                  # wINNER wINNER! cHICKEN DINNER
 
+
+# DESIGN / ALIGNMENT
 # adding width on both sides to center the text
 print(str3.center(50))                  #           Winner Winner! Chicken dinner           
+
+
+# STRING VALIDATIONS
+print('abc123'.isalnum())               # True
+print('abc 123'.isalnum())              # False
+print('abcdef'.isalpha())               # True
+print('ab12#$%-.lP'.isascii())          # True
+print('203'.isdecimal())                # True
+print('abcd'.isdecimal())               # False
+print('904238'.isdigit())               # True
+print('9042.38'.isdigit())              # False
+print('abc1'.isidentifier())            # True
+print'abc$'.isidentifier())             # False
+print('1abc'.isidentifier())            # False
+print('1ab,c'.islower())                # True
+print('Cab2'.islower())                 # False
+print('0123'.isnumeric())               # True
+print('123.10'.isnumeric())             # False
+print('Ab#91.33'.isprintable())         # True
+print('     '.isspace())                # True
+print('	a   '.isspace())                # False
+print('You Are'.istitle())              # True
+print('You are'.istitle())              # False
+print('ABCDE'.isupper())                # True
+
+
+# SPLITTERS
+print('ABCDE'.partition('C'))           # ('AB', 'C', 'DE')
+print('ABCDE'.partition('E'))           # ('ABCD', 'E', '')
+print('ABCDE'.partition('A'))           # ('', 'A', 'BCDE')
+print('ABCDE'.partition('F'))           # ('ABCDE', '', '')
+
+print('ABCDE'.removeprefix('AB'))       # CDE
+print('ABCDE'.removeprefix('AC'))       # ABCDE
+print('ABCDE'.removesuffix('DE'))       # DE
+print('ABCDE'.removesuffix('KE'))       # ABCDE
+
+print('ABCDE'.split('C'))               # ['AB', 'DE']
+print('ABCDE'.split('F'))               # ['ABCDE']
+print('ABC\nDE'.splitlines())           # ['ABC', 'DE']
 ```
 
 ### Sequence Type - list
@@ -1134,4 +1177,19 @@ for char in word:
 for key, values in sorted(results_dict.items()):
     print(f'{key} is present {values} time(s)')             # a is present 1 time(s)
                                                             # e is present 2 time(s)
+```
+
+```python
+# program: reverse a string
+# approach_1
+str1 = input('Enter a string: ')                            # december
+print('Revered string:', str1[::-1])                        # Revered string: rebmeced
+
+# approach_2
+print('Revered string:', ''.join(reversed(str1)))           # Revered string: rebmeced
+
+# approach_3
+lst = list(str1)
+lst.reverse()
+print('Reversed string:', ''.join(lst))                     # Reversed string: rebmeced
 ```
