@@ -89,6 +89,8 @@ print(type(p))          # <class 'float'>
 d = 3 + 5j
 print(d)                # (3 + 5j)
 print(type(d))          # <class 'complex'>
+print(d.real)           # 3.0
+print(d.imag)           # 5.0
 
 # binary type
 e = 0b1010              # 'b' can be in small or capital letter
@@ -259,6 +261,18 @@ print(str1.find('awe'))                 # 10
 print(str1.find('awe', 0, len(str1)))   # 10
 print(str1.find('awe', 0, 8))           # -1
 
+# get the index of the substring if it is present in the string
+# throws ValueError if the substring is not present in the string
+# syntax: str.index(sub_string, <start_index>, <end_index>)
+print(str1.index('are'))                # 4
+print(str1.index('are', 4, 10))         # 4
+
+# check if a substring is present at the end in the given string
+print(str1.endswith('some'))            # True
+
+# check if a substring is present at the beginning in the given string
+print(str1.startswith('You'))           # True
+
 
 # COUNT OCCURRENCES (CHARACTER / SUBSTRING)
 # syntax: str_var.count(str_to_search:beg_index:end_index)
@@ -273,12 +287,20 @@ print(str1.replace('awesome', 'super')) # You are super
 
 
 # SWITCHING CASES
-print(str1.upper())                     # YOU ARE AWESOME
-print(str1.lower())                     # you are awesome
-print(str1.title())                     # You Are Awesome
+str3 = 'Winner Winner! Chicken dinner'
+print(str3.upper())                     # WINNER WINNER! CHICKEN DINNER
+print(str3.lower())                     # winner winner! chicken dinner
+print(str3.casefold()                   # winner winner! chicken dinner
+print(str3.title())                     # You Are Awesome
+print(str3.capitalize())                # Winner winner! chicken dinner
+
+# adding width on both sides to center the text
+print(str3.center(50))                  #           Winner Winner! Chicken dinner           
 ```
 
 ### Sequence Type - list
+
+- A list type in Python is mutable in nature.
 
 ```python
 lst = [10, 20, 'Deepjyoti', -50, 80, 48.9]
@@ -368,11 +390,11 @@ print(lst)                              # []
 
 ### Sequence Type - tuple
 
-- Tuple is just like a List data-structure, but it is immutable / read-only (i.e. once we create a tuple we can't modify it).
+- tuple is just like a list data-structure, but it is immutable / read-only (i.e. once we create a tuple we can't modify it).
 - A tuple maintains the insertion order.
 - A tuple allows duplicate elements.
 - We can add heterogeneous / different types of elements in a tuple.
-- We can create a tuple by using parenthesis (). The parenthesis are optional, but it is recommended to use it as it is much more readable.
+- We can create a tuple by using parenthesis (). The parenthesis are optional, but it is recommended to use it as it makes the code much more readable.
 - If we have a single value in a tuple then we should always end it with a comma or else Python interpreter will treat it as a single element variable. (e.g. tup = 1, )
 
 ```python
@@ -414,18 +436,20 @@ print(type(tpl))                        # <class 'tuple'>
 
 ### list vs tuple
 
-- List uses square brackets to wrap a list of elements, whereas tuple uses parenthesis.
+- list uses square brackets to wrap a list of elements, whereas tuple uses parenthesis.
 - For a list using square brackets are mandatory, whereas for a tuple its optional to use a pair of parenthesis.
-- List is mutable, whereas tuple is immutable.
-- List should be used in situations where we need to do manipulations on the elements, tuple should be used where consistency of the elements are mandatory.
+- list is mutable, whereas tuple is immutable.
+- list should be used in situations where we need to do manipulations on the elements, tuple should be used where consistency of the elements are mandatory.
 - A list cannot be used as a key to the dictionary, because a dictionary key should be hashable and immutable, since tuple is immutable we can use tuple as a key to the dictionary.
 
 ### Set Types - set and frozenset
 
+- A set type in Python is mutable in nature.
 - The set sequence type does not allow duplicates.
-- Set does not maintain any order of its elements.
+- set does not maintain any order of its elements.
 - We cannot perform indexing, slicing or repetition on a set.
 - A frozenset does not allow add, update or remove operation in a set.
+- A frozenset type in Python is immutable in nature.
 - A set supports multiple other methods like union(), intersection(), difference(), isdisjoint(), issubset(), issuperset() etc.
 
 ```python
@@ -494,8 +518,10 @@ fs = frozenset(st)
 
 ### Sequence Type - range
 
+- A range type in Python is immutable in nature.
+- Syntax: `range(<start_value>, end_value, <step>)`
+
 ```python
-# syntax: range(<start_value>, end_value, <step>)
 # range with only one argument
 r = range(5)
 print(r)                                # range(0, 5)
@@ -544,6 +570,7 @@ b1[3] = 22                              # No error
 
 ### Mapping Type - dict
 
+- A dict type in Python is mutable in nature.
 - The dict data type stores data in the form of key-value pair.
 - The key and value both can be of any type.
 - If same key is present two or more times then only the last value assigned to that key will be considered.
@@ -659,7 +686,7 @@ print(dict1)                            # {}
 ### Immutability in Python
 
 - When we define a variable in Python `a = 10` the PVM or Python Virtual Machine will store and allocate the memory for this value and the variable `a` will point to it. When we again declare a variable `b = 10`, PVM will first check if the value `10` is stored somewhere else in any memory location. If the memory location is found then PVM will not allocate new memory for the value `10` instead variable `b` will point to the same memory location pointed by variable `a`, saving us space. If we reassign a new value `b = 14` in this case PVM will store and allocate memory in a new location for this value and variable `b` will not point to it. This process is called immutability, where we cannot change the value in an existing memory location, instead a new memory location will be created whenever needed and the variable will point to that.
-- Unlike Java, all the data types (object types + primitive types) in Python are immutable, whereas in Java only String object type is immutable.
+- Unlike Java, all primitive types and some object types in Python are immutable, whereas in Java only String object type is immutable.
 
 ```python
 a = 10
@@ -677,5 +704,434 @@ print(a is b)                           # True
 b = 20
 print(id(b))                            # 4353424272
 print(a is b)                           # False
+```
 
+### Special Types
+
+- `None`: When we don't have any value to assign yet in a variable in our program, but still we want to assign some value to it - we can assign `None` to it.
+- If a method in Python is not returning any value by default it will return None.
+- An escape character is a character that invokes an alternative interpretation on the following characters in a character sequence.
+- An escape character is a backslash \ followed by the character you want to insert.
+- Some most used escape characters are \n, \t, \\" etc.
+- In Java we have `final` keyword to declare a constant, in C or C++ we have a keyword `const` to declare a constant, but in Python we follow a convention where we will use all capital letters while naming a constant.
+- `del` keyword can be used for cleanup or delete objects within our program.
+
+```python
+# None use-cases
+a = None
+print(a)                                # None
+
+def m1():
+    b = 10
+
+print(m1())                             # None
+
+# escape characters
+print("He is known as \"God of All Time\"")         # He is known as "God of All Time"
+print("Mike\t&\tTike are best friends")             # Mike	&	Tike are best friends
+
+# constants
+# this convention conveys the message to other developer that during their development they should to alter values for these variables
+PI = 3.14
+MAX_VALUE = 999
+INTEREST_RATE = 7.3
+
+# del keyword
+c = 29
+del c
+# print(c)                              # NameError: name 'c' is not defined
+
+# We can delete a string object, but we can't delete a character from it as str type is immutable in nature
+s = 'abcd'
+# del s[0]                              # TypeError: 'str' object doesn't support item deletion
+```
+
+## Operators and Operands
+
+### Arithmetic Operators
+
+- Arithmetic operators are:
+  - Addition: +
+  - Subtraction: -
+  - Multiplication: *
+  - Division: /
+  - Remainder of a division / Modulo division: %
+  - Exponent / Power: **
+  - Integer division / Floor division: //
+
+```python
+a, b = 10, 4
+
+print('a + b =', a + b)                 # a + b = 14
+print('a - b =', a - b)                 # a - b = 6
+print('a * b =', a * b)                 # a * b = 40
+print('a / b =', a / b)                 # a / b = 2.5
+print('a % b =', a % b)                 # a % b = 2
+print('a ** b =', a ** b)               # a ** b = 10000
+print('a // b =', a // b)               # a // b = 2
+```
+
+### Assignment Operators
+
+- Assignment operators are:
+  - Single equal / simple assignment: =
+  - Compound assignment (with arithmetic operators): +=, -=, *=, /=, %=, **=, //=
+  - Compound assignment (with bitwise operators): &=, |=, ^=, >>=, <<=
+
+```python
+# chain assignment
+a = b = c = 10
+print(a, b, c)                          # 10 10 10
+
+# compound assignment
+x, y = 10, 5
+x += y
+print(x)                                # 15
+```
+
+### Comparison Operators
+
+- Comparison operators are:
+  - Double equals / Equality / Equal to: ==
+  - Not equal to: !=
+  - Greater than: >
+  - Less than: <
+  - Greater than or equal to: >=
+  - Less than or equal to: <=
+
+```python
+x, y = 77, 88
+
+print(x == y)                           # False
+print(x != y)                           # True
+print(x > y)                            # False
+print(x < y)                            # True
+print(x >= y)                           # False
+print(x <= y)                           # True
+```
+
+### Logical Operators
+
+- Logical operators always work with boolean values (operands are of bool type).
+- Logical operators are:
+  - AND: and
+  - OR: or
+  - NOT: not
+
+```python
+x, y = 20, 30
+
+print(x == 20 and y == 30)              # True
+print(x == 25 and y == 30)              # False
+
+print(x == 25 or y == 30)               # True
+print(x == 25 or y == 31)               # False
+
+print(not(x == 25 or y == 31))          # True
+```
+
+### Bitwise Operators
+
+- Bitwise operators are:
+  - Bitwise AND: &
+  - Bitwise OR: |
+  - Bitwise NOT: ~
+  - Bitwise XOR: ^
+  - Bitwise right shift: >>
+  - Bitwise left shift: <<
+
+```python
+# x = 10 = (0000 1010) in binary
+x = 10
+
+# y = 4  = (0000 0100) in binary
+y = 4
+
+# (0000 0000)
+print(x & y)                            # 0
+
+# (0000 1110)
+print(x | y)                            # 14
+
+# (0000 1110)
+print(x ^ y)                            # 14
+
+# (1111 0101) = 2's complement => -11
+print(~x)                               # -11
+
+# (0000 0010)
+print(x >> 2)                           # 2
+
+# (0010 1000)
+print(x << 2)                           # 40
+```
+
+## Input and Output Functions
+
+```python
+# different use of print() function
+print()                                 # adds an empty newline
+print('Hello')                          # Hello
+print('Hello ' * 3)                     # Hello Hello Hello
+print('India \nis the best')            # India
+                                        # is the best
+
+item, price = 'apple', 70
+print(item, price)                      # apple 70
+print(item, price, sep=' | ')           # apple | 70
+print('Hello', end=' ')
+print('World')                          # Hello World
+
+# STRING FORMATTING
+# using addition operator
+print('An ' + item + ' costs ' + str(price) + ' rupees per kilo')           # An apple costs 70 rupees per kilo
+
+# using comma operator
+print('An', item, 'costs', price, 'rupees per kilo')                        # An apple costs 70 rupees per kilo
+
+# using modulo operator
+print('An %s costs %i rupees per kilo' % (item, price))                     # An apple costs 70 rupees per kilo
+
+# using format method
+print('An {} costs {} rupees per kilo'.format(item, price))                 # An apple costs 70 rupees per kilo
+print('An {1} costs {0} rupees per kilo'.format(price, item))               # An apple costs 70 rupees per kilo
+print('An {arg0} costs {arg1} rupees per kilo'.format(arg0=item, arg1=price))   # An apple costs 70 rupees per kilo
+
+# using join method
+print("".join(['An ', item, ' costs ', str(price), ' rupees per kilo']))    # An apple costs 70 rupees per kilo
+
+# using f-string (The best and most recommended way)
+print(f'An {item} costs {price} rupees per kilo')
+```
+
+```python
+# reading input from user without a message
+name = input()                                  # Deepjyoti
+print(name)                                     # Deepjyoti
+
+# reading input from user with a message
+occ = input('What is your occupation? ')        # What is your occupation? Student
+print(occ)                                      # Student
+
+# reading integer input from user
+age = int(input('How old are you? '))           # How old are you? 28
+print(age)                                      # 28
+print(type(age))                                # <class 'int'>
+
+# reading multiple inputs from the user using input()
+num_list1 = [x for x in input('Enter any three number separated by space: ').split()]    # Enter any three number separated by space: 1 2 3
+print(num_list1)                                # ['1', '2', '3']
+
+
+num_list2 = [float(x) for x in input('Enter any three number separated by comma: ').split()]    # Enter any three number separated by space: 1.4,2.7,3.9
+print(num_list1)                                # [1.4, 2.7, 3.9]
+```
+
+```python
+# program: find the area of a circle reading the radius from the end-user
+import math
+
+radius = float(input('Enter the radius of the circle: '))          # Enter the radius of the circle: 5
+# area = math.pi * radius ** 2
+area = math.pi * math.pow(radius, 2)
+print('Area of the circle: %.2f' % area)        # Area of the circle: 78.54
+```
+
+## Flow Control Statements
+
+- Flow control determines the order in which the statements are executed at runtime.
+- They are categorized into:
+  - Conditional statements
+  - Iterative / looping statements
+  - Transfer statements
+- Conditional Statements: Allows us to execute our code conditionally (i.e based on a given condition). These are:
+  - if
+  - if..else
+  - if..elif..else (if-else ladder)
+- Looping Statements: Allows us to execute same set of statements or logics multiple times. These are:
+  - while
+  - for
+- Transfer Statements: Allows us to transfer the control of our program from one place to another. These are:
+  - break
+  - continue
+  - pass
+  - return
+
+### if / if..else / if..elif..else
+
+```python
+num = int(input('Enter any number: '))          # Enter any number: 4
+
+# if
+# checking if the number is even
+if num % 2 == 0:
+    print(f'{num} is even')                     # 4 is even
+
+# if..else
+# checking if the number is even or odd
+if (num % 2 == 0):
+    print(f'{num} is even')                     # 4 is even
+else:
+    print(f'{num} is odd')
+
+# if..elif..else
+# checking if the number is even, odd or a zero
+if num == 0:
+    print(f'{num} is neither odd nor even')
+elif num % 2 == 0:
+    print(f'{num} is even')                     # 4 is even
+else:
+    print(f'{num} is odd')
+```
+
+### while loop
+
+```python
+num = 1
+
+# while
+# printing values from 1 to 20
+while (num <= 20):
+    print(num, end=' ')                         # 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 
+    num += 1
+```
+
+```python
+# program: print all odd numbers in a given range
+start = int(input('Enter the starting number of the range: '))      # Enter the starting number of the range: 2
+end   = int(input('Enter the ending number of the range: '))        # Enter the ending number of the range: 9
+
+if start % 2 == 0:
+    start += 1
+
+while start <= end:
+    print(start, end=' ')                       # 3 5 7 9 
+    start += 2
+```
+
+### for loop
+
+- A for loop in Python is a sequence based loop (i.e. it works only with sequences).
+- A for loop is typically used to iterate over the elements of a sequence like string, list, tuple, set, range etc.
+
+```python
+# for
+# printing values from 50 to 70
+for i in range(50, 71):
+    print(i, end=' ')                           # 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 
+```
+
+### break
+
+```python
+# break
+# break out of the loop if number 5 is present in the loop, else print all the elements
+lst = [1, 4, 9, 7, 5, 2, 8]
+
+for i in lst:
+    if i == 5:
+        break
+    print(i, end=' ')                           # 1 4 9 7
+```
+
+### continue
+
+```python
+# continue
+# print 1 to 20 while skipping multiples of 3
+for i in range(1, 21):
+    if i % 3 == 0:
+        continue
+    print(i, end=' ')                           # 1 2 4 5 7 8 10 11 13 14 16 17 19 20 
+```
+
+### assert
+
+- assert will abnormally terminate the flow of a program raising an AssertionError if the condition given next to this statement found to evaluate `False`.
+
+```python
+# validate if the number given by the end-user is greater than 10
+num = int(input('Enter any number greater than 10: '))      # Enter any number greater than 10: 2
+
+assert num > 10, 'Wrong number entered'         # AssertionError: Wrong number entered
+print('PASS - you have entered', num)
+```
+
+### pass
+
+- In Python, pass is a null statement. The interpreter does not ignore a pass statement, but nothing happens and the statement results into no operation.
+- The pass statement is useful when you don’t write the implementation of a function but you want to implement it in the future.
+- pass primarily used to avoid compilation errors, when some code block is left empty. It has become a need for the programmers because unlike other languages Python do not use curly braces {} to identify an empty block without any statements.
+
+```python
+# pass (example - 1)
+def addition(num1, num2):
+    pass
+
+addition(2, 2)
+
+# pass (example - 2)
+# prints the number if it is not 2
+number = 3
+if number == 2:
+    pass
+else:
+    print ('Number: ', number)                  # Number: 3
+```
+
+### return
+
+- The return statement is used to return values from functions / methods.
+
+```python
+def getName():
+    name = input('What is your name? ')         # What is your name? Deepjyoti
+    return name
+
+nm = getName()
+print('Nice to meet you %s' % nm)               # Nice to meet you Deepjyoti
+```
+
+### eval
+
+- eval is a built-in function used in Python.
+- eval function parses the expression argument and evaluates it as a Python expression. In simple words, the eval function evaluates the "String" like a python expression and returns the result as an integer.
+- Syntax: `eval(expression, [globals[, locals]])`
+- Arguments and parameters: The arguments or parameters of eval function are strings, also optionally global and locals can be used as an argument inside eval function, but the globals must be represented as a dictionary and the locals as a mapped object.
+- Return value: The return value would be the result of the evaluated expression. Often the return type would be an integer.
+
+```python
+num = eval(input('Enter any number of your choice: '))      # Enter any number of your choice: 10 + 10
+print(num)                                                  # 20
+print(type(eval))                                           # <class 'int'>
+```
+
+### Practice Programs
+
+```python
+# program: remove duplicate elements from a list
+l1 = eval(input('Enter a list of elements: '))              # Enter a list of elements: [10, 20, 30, 40, 30, 20]
+l2 = []
+
+for each_value in l1:
+    if each_value not in l2:
+        l2.append(each_value)
+
+print('List of unique elements:', l2)                       # List of unique elements: [10, 20, 30, 40]
+```
+
+```python
+# program: count the number of vowels in a given word
+word = input('Enter a word: ')                              # Enter a word: eagle
+vowels = {'a', 'e', 'i', 'o', 'u'}
+results_dict = {}
+
+for char in word:
+    if char in vowels:
+        # Syntax: dict.get(key, default=None)
+        results_dict[char] = results_dict.get(char, 0) + 1
+
+for key, values in sorted(results_dict.items()):
+    print(f'{key} is present {values} time(s)')             # a is present 1 time(s)
+                                                            # e is present 2 time(s)
 ```
