@@ -909,6 +909,56 @@ print(x >> 2)                           # 2
 print(x << 2)                           # 40
 ```
 
+### Membership Operators
+
+- Membership operators are used to check an item or an element that is part of a string, a list, a tuple or any sequence.
+- Membership operators are:
+  - in - Returns true, if item is present in the list or sequence.
+  - not in - Returns true, if item is not present in the list or sequence.
+
+```python
+print(10 in [20, 10, 30, 60])           # True
+print('s' in 'switzerland')             # True
+print(4 not in range(1, 20))            # False
+```
+
+### Identity Operators
+
+- Identity operators are used to check whether reference of both operands are same or not.
+- Identity operators are:
+  - is - Returns true, if reference of both the operands are same.
+  - is not - Returns true, if reference of both the operands are different.
+
+```python
+a = 10
+b = 10
+c = 20
+
+print(a is b)                           # True
+print(b is c)                           # False
+print(a is not c)                       # True
+```
+
+
+### Precedence of Operators
+
+- Following is the operator precedence table in lower to higher order:
+
+| Operator                        | Description                                                |
+| :------------------------------ | :--------------------------------------------------------- |
+| NOT, OR, AND                    | Logical operators                                          |
+| in, not in                      | Membership operators                                       |
+| is, not is                      | Identity operators                                         |
+| =, %=, /=, //=, +=, -=, *=, **= | Assignment operators                                       |
+| <>, ==, !=                      | Equality operators                                         |
+| >, <, >=, <=                    | Comparison operators                                       |
+| ^, \|                           | Bitwise XOR, Bitwise OR operator                           |
+| &                               | Bitwise AND operator                                       |
+| <<, >>                          | Bitwise left shift, Bitwise right shift operator           |
+| +, -                            | Addition, Subtraction operator                             |
+| *, /, %, //                     | Multiplication, Division, Modulus, Floor division operator |
+| **                              | Exponential operator                                       |
+
 ## Input and Output Functions
 
 ```python
