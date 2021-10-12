@@ -1243,3 +1243,79 @@ lst = list(str1)
 lst.reverse()
 print('Reversed string:', ''.join(lst))                     # Reversed string: rebmeced
 ```
+
+```python
+# program: print right angled triangle pattern
+rows = int(input('Enter the number of rows for the pattern to expand: '))
+
+# approach - 1
+for i in range(rows):
+    for j in range(i + 1):
+        print('*', end=' ')
+    print()
+
+# approach - 2 (the python way)
+for i in range(rows):
+    print('* ' * (i + 1))
+```
+
+```python
+# program: print pyramid pattern
+rows = int(input('Enter the number of rows for the pattern to expand: '))
+
+for i in range(rows):
+    print(' ' * rows - i)
+    print('* ' * i + 1)
+```
+
+```python
+# program: find substring in given string
+s = 'Take up one idea and make that idea your life. Think and dream of that idea and leave every other idea alone.'
+subs = 'idea'
+pos = -1
+length = len(s)
+
+while True:
+    pos = s.find(subs, pos + 1, length)
+
+    if pos == -1:
+        break;
+    
+    print('Found the substring at position: ', pos)
+    found = True
+
+if found == False:
+    print('Substring is not found')
+```
+
+## Command Line Arguments
+
+- The command line arguments are those arguments that are passed when our Python program is run.  
+  `> python3 my_program.py 123 abc xyz`
+- Main uses of command line argument could be:
+  - Passing in a 'File location' dynamically at the runtime (instead of hard-coding it inside our program).
+  - Passing in a 'Database name' or 'Connection URL'
+  - Passing in a 'Remote IP address'
+- The values passed at runtime from command line are saved in a list called 'argv', which is present inside 'sys' module.
+
+```python
+# program: calculate the product of all the command line arguments passed
+import sys
+
+prod = 1
+for i in range(1, len(sys.argv)):
+    prod *= int(sys.argv[i])
+    i += 1
+
+if len(sys.argv) == 1:
+    print('No arguments are passed while running the program')
+else:
+    print('Result:', prod)
+```
+
+## Functions
+
+- A function in Python can return multiple values at a shot.
+- We can have one function inside another function in Python, nesting of functions is possible in Python.
+- A Python function can take another function as an argument.
+- A Python function can return another function.
