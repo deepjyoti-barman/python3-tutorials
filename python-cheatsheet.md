@@ -1315,7 +1315,275 @@ else:
 
 ## Functions
 
-- A function in Python can return multiple values at a shot.
-- We can have one function inside another function in Python, nesting of functions is possible in Python.
-- A Python function can take another function as an argument.
-- A Python function can return another function.
+- A function is a group of statements which perform a certain task.
+- Function can be of two type - in-built functions [i.e. input(), print()] and user defined functions.
+- User defined functions are used to process data, perform mathematical calculations and so on.
+- Advantages of functions are:
+  - Reusability: Once we define a function and the statements inside it those statements need not be repeated at any other place in our application, we can simply invoke or call the function and that particular logic will happen for us.
+  - Modularity: When we are working on a huge application we need not put the entire code in one single script of function. We can define multiple functions which will make our application modular.
+  - Maintenance: The modularity brings in easy maintenance. If an issue causes in a function or two we can easily find it out and fix then, or if we want to add something new we can just go to a particular function where the change needs to happen and add that functionality easily.
+- Special properties or behaviors of functions in Python:
+  - A function in Python can return multiple values at a shot. In this case all the values will be returned as a tuple so that they can't be modified and can be simply used.
+  - A function in Python can be assigned to a variable, and then used as many no of times as we want.
+  - We can have one function inside another function in Python (i.e. nesting of functions is possible). You can use this functionality when you want to break down your logic into multiple pieces and these child / inner functions are only available inside the parent function.
+  - A function in Python can take another function as an argument.
+  - A function in Python can return another function.
+  - A function in Python can accept any variable type - string, int, list, tuple, dict and so on.
+- Recursion:
+  - Recursion is the process of a function calling itself.
+  - While writing a recursive function the very first step is to define a base / end condition, or it will run into an infinite loop.
+  - Good place to use recursion is whenever the same logic is repeating in a program.
+  - Recursion is not a good candidate for everything, because recursion could be very confusing for people who are reading our program.
+- Default Arguments:
+  - If a function is expecting n arguments and we pass less than n arguments to that function Python interpreter will throw an error, in such cases using default arguments can prove out to be very handy.
+  - We can pass in and set default (argument) values for any types.
+  - As soon as you pass in a parameter automatically its value will be used, i.e. the default value will not be used.
+- Variable / Optional Arguments:
+  - When we don't know the exact number of parameters that a function should accommodate at the time of defining the function, optional arguments can prove out to be very handy.
+  - If we name the optional positional argument *args, all extra positional parameters passed into the function will be stored into 'args' as a tuple
+  - Name of the optional positional argument can be anything i.e. *args, *pos_params etc, ultimately it's the * which matters.
+  - If we name the optional keyword argument **kwargs, all extra keyword parameters passed into the function will be stored into 'kwargs' as a dict.
+  - Name of the optional keyword argument can be anything i.e. **kwargs, **key_params etc, ultimately it's the ** which matters.
+  - We can pass the optional positional and keyword arguments to other functions and can alter them in between.
+  
+
+```python
+# program: create a function to find the average of two numbers
+def average(num1, num2):
+    print('Average of two numbers:', (num1 + num2) / 2)
+
+average(10, 20)                                 # Average of two numbers: 15.0
+```
+
+```python
+# program: returning the result from a function
+def average(num1, num2):
+    return (num1 + num2) / 2
+
+result = average(10, 20)
+print('Average of two numbers:', result)        # Average of two numbers: 15.0
+```
+
+```python
+# program: returning multiple values from a function
+def calc(num1, num2):
+    a = num1 + num2
+    b = num1 - num2
+    c = num1 * num2
+    d = num1 / num2
+    return a, b, c, d
+
+# printing the tuple
+result = calc(10, 5)
+print(result)                                   # (15, 5, 50, 2.0)
+
+# accessing each value from the tuple
+for i in result:
+    print(i, end=' ')                           # 15 5 50 2.0
+```
+
+```python
+# program: showcase the use and scope of global and local variables in Python
+# global variable
+x = 123
+
+def display():
+    # local variable
+    y = 678
+    print(x)
+    print(y)
+
+print(x)                                        # 123
+# print(y)                                      # NameError: name 'y' is not defined
+display()                                       # 123
+                                                # 678
+```
+
+```python
+# program: demonstrate that local variable scope takes precedence over global variable scope
+# global variable
+x = 123
+
+def display():
+    # local variable
+    x = 678
+    print(x)
+
+print(x)                                        # 123
+display()                                       # 678
+```
+
+```python
+# program: accessing global variable with the same name inside the function
+x = 123
+
+def display():
+    x = 678
+    print(x)
+
+    print(globals()['x'])
+    globals()['x'] = 999
+
+print(x)                                        # 123
+display()                                       # 678
+                                                # 123
+print(x)                                        # 999
+```
+
+```python
+# program: assigning a Python function to a variable
+def func_with_a_very_long_name():
+    print('I am function with a very long name')
+
+# assigning function to a variable
+short_func = func_with_a_very_long_name
+
+# invoking the function variable
+short_func()                                    # I am function with a very long name
+short_func()                                    # I am function with a very long name
+```
+
+```python
+# program: demonstrate nesting function inside another function
+def display(name):
+    def message():
+        return 'Hello '
+    
+    result = message() + name
+    return result
+
+# message()                                     # NameError: name 'message' is not define
+print(display('Arnold'))                        # Hello Arnold
+```
+
+```python
+# program: demonstrate passing of one function as a parameter to another function
+def display(func):
+    # return 'Hello ' and what ever the other function returns
+    return 'Hello ' + func
+
+def name():
+    return 'Bob'
+
+# DON'T USE: print(display(name)) -> this way it passes the function as a variable (i.e. we will be passing the variable and not the actual function)
+print(display(name()))                          # Hello Bob
+```
+
+```python
+# program: demonstrate returning a function from another function
+def display():
+    def message():
+        return 'Hello '
+    
+    # DON'T USE: return message() -> this way it will be returning the value which is returned after invoking message() function (i.e. we will be returning 'Hello ' and not the actual function)
+    return message
+
+# one way
+func = display()
+print(func() + ' Charlie')                      # Hello Charlie
+
+# second way
+print(display()(), 'Charlie')                   # Hello Charlie
+```
+
+```python
+# program: passing any variable type to a function
+def print_list(lst):
+    for i in lst:
+        print(i, end=' ')
+
+print_list([10, 20, 30, 40])                    # 10 20 30 40
+```
+
+```python
+# program: find the factorial of a number using recursion
+def factorial(n):
+    if n == 0:
+        result = 1
+    else:
+        result = n * factorial(n - 1)
+    return result
+
+print(factorial(5))                             # 120
+```
+
+```python
+# program: demonstrate the use of keyword arguments in Python
+def display(a, b):
+    print(a, b)
+
+display(a=10, b=20)                             # 10 20
+display(b=10, a=20)                             # 20 10
+```
+
+```python
+# program: demonstrate the use of default arguments in Python
+def sum(a=0, b=0):
+    print('a =', a, 'b =', b)
+    return a + b
+
+print('sum =', sum())                           # a = 0 b = 0
+                                                # sum = 0
+print('sum =', sum(10))                         # a = 10 b = 0
+                                                # sum = 10
+print('sum =', sum(b=10))                       # a = 0 b = 10
+                                                # sum = 10
+print('sum =', sum(10, 20))                     # a = 10 b = 20
+                                                # sum = 30
+print('sum =', sum(b=20, a=30))                 # a = 30 b = 20
+                                                # sum = 50
+```
+
+```python
+# program: demonstrate the use of variable arguments or optional arguments in a Python program
+# *args is the optional positional argument in func1() which can accept any number of positional parameters
+# **kwargs is the optional keyword argument in func1() which can accept any number of keyword parameters
+def func1(x, *args, **kwargs):
+    print('x =', x)
+    print('extra positional params =', args)
+    print('extra keyword params =', kwargs)
+
+# func1()                                       # TypeError: func1() missing 1 required positional argument: 'x'
+func1(10)                                       # x = 10
+                                                # extra positional params = ()
+                                                # extra keyword params = {}
+func1(10, 20)                                   # x = 10
+                                                # extra positional params = (20,)
+                                                # extra keyword params = {}
+func1(10, 20, 'abc', 30.5)                      # x = 10
+                                                # extra positional params = (20, 'abc', 30.5)
+                                                # extra keyword params = {}
+func1(10, 20, 'abc', 30.5, name='David', id=7)  # x = 10
+                                                # extra positional params = (20, 'abc', 30.5)
+                                                # extra keyword params = {'name': 'David', 'id': 7}
+```
+
+```python
+# program: demonstrate passing optional arguments to other functions
+def func1(x, *args, **kwargs):
+    print('from func1()')
+    print('x =', x)
+    print('extra positional params =', args)
+    print('extra keyword params =', kwargs)
+
+    # adding another positional parameter into tuple 'args'
+    modified_args = args + (77.5, )
+
+    # adding another keyword parameter into the dict 'kwargs'
+    kwargs['id'] = 4
+
+    func2(*modified_args, **kwargs)
+
+def func2(*args, **kwargs):
+    print('from func2()')
+    print('extra positional params =', args)
+    print('extra keyword params =', kwargs)
+
+func1(10, 20, 'abc', name='Erik', sal=50.5)     # from func1()
+                                                # x = 10
+                                                # extra positional params = (20, 'abc')
+                                                # extra keyword params = {'name': 'Erik', 'sal': 50.5}
+                                                # from func2()
+                                                # extra positional params = (20, 'abc', 77.5)
+                                                # extra keyword params = {'name': 'Erik', 'sal': 50.5, 'id': 4}
+```
