@@ -1460,13 +1460,13 @@ print(display('Arnold'))                        # Hello Arnold
 # program: demonstrate passing of one function as a parameter to another function
 def display(func):
     # return 'Hello ' and what ever the other function returns
-    return 'Hello ' + func
+    return 'Hello ' + func()
 
 def name():
     return 'Bob'
 
-# DON'T USE: print(display(name)) -> this way it passes the function as a variable (i.e. we will be passing the variable and not the actual function)
-print(display(name()))                          # Hello Bob
+# DON'T USE: print(display(name())) -> this way it invoke name() function and pass the value 'Bob' returned by it (i.e. we will be passing the variable and not the actual function)
+print(display(name))                          # Hello Bob
 ```
 
 ```python
@@ -1587,3 +1587,214 @@ func1(10, 20, 'abc', name='Erik', sal=50.5)     # from func1()
                                                 # extra positional params = (20, 'abc', 77.5)
                                                 # extra keyword params = {'name': 'Erik', 'sal': 50.5, 'id': 4}
 ```
+
+## Lambdas
+
+- A lambda is a anonymous function that will not have any name.
+- Syntax: lambda \<argument-list\>: \<expression\>
+- Unlike a function a lambda will always return a function back.
+- It is not a good practice to use it all the times by assigning it to a function and invoking it, but lambda expression are very helpful when it use them inside other functions like map, filter and reduce. These functions will take a function as a list as parameter and will apply that function to every element in that list.
+- You can't write multiple lines lambda in Python, lambda functions can only have one expression.
+
+```python
+# program: print the cube of a number using lambda expression
+def cube(n):
+    return n ** 3
+
+lambda_cube = lambda n: n ** 3
+
+print(cube(2))                                  # 8
+print(lambda_cube(3))                           # 27
+```
+
+```python
+# program: print YES if the number is even, NO if the number is odd using lambda expression
+is_even = lambda n: 'YES' if n % 2 == 0 else 'NO'
+
+print(is_even(10))                              # YES
+print(is_even(9))                               # NO
+```
+
+```python
+# program: print the sum of two numbers using lambda expression
+calc_sum = lambda a, b: a + b
+
+print(calc_sum(4, 5))                           # 9
+```
+
+```python
+# program: retrieve and print all the even numbers from a given list of numbers using filter() function with lambda expression
+lst = [10, 21, 9, 33, 48, 95, 10, 74]
+
+# even numbers without lambda expression (process 1)
+def is_even1(n):
+    if n % 2 == 0:
+        return True
+    else:
+        return False
+
+filtered_list = filter(is_even1, lst)
+print(filtered_list)                            # <filter object at 0x10bf94ee0>
+print(type(filtered_list))                      # <class 'filter'>
+even_nos_list1 = list(filtered_list)
+print(even_nos_list1)                           # [10, 48, 10, 74]
+
+# even numbers without lambda expression (process 2)
+def is_even2(n):
+    if n % 2 == 0:
+        # The return value should a truthy value i.e. any of the following statements will work
+        # return True
+        # return 9999
+        # return 1.10
+        # return 'YES'
+        return -1
+
+even_nos_list2 = list(filter(is_even2, lst))
+print(even_nos_list2)                           # [10, 48, 10, 74]
+
+# even numbers with lambda expression
+even_nos_list3 = list(filter(lambda n: n % 2 == 0, lst))
+print(even_nos_list3)                           # [10, 48, 10, 74]
+```
+
+```python
+# program: double all the numbers present in a list and print them using map() function and lambda expression
+lst = [2, 3, 4, 5, 6]
+
+# double the numbers without lambda expression
+def double(n):
+    return n * 2
+
+mapped_list = map(double, lst)
+print(mapped_list)                              # <map object at 0x108754ee0>
+print(type(mapped_list))                        # <class 'map'>
+doubled_list1 = list(mapped_list)
+print(doubled_list1)                            # [4, 6, 8, 10, 12]
+
+# double the numbers using lambda expression
+doubled_list2 = list(map(lambda n: n * 2, lst))
+print(doubled_list2)                            # [4, 6, 8, 10, 12]
+
+```
+
+```python
+# program: find the sum of all the elements present in a list using reduce() function and lambda expression
+from functools import reduce
+
+lst = [1, 2, 6, 8, 4, 7]
+
+# summation without lambda expression
+def sum(x, y):
+    return x + y
+
+reduced_list = reduce(sum, lst)
+print(reduced_list)                             # 28
+print(type(reduced_list))                       # <class 'int'>
+
+# summation with lambda expression
+summation = reduce(lambda x, y: x + y, lst)
+print(summation)                                # 28
+```
+
+## Decorators and Generators
+
+- Decorators:
+  - A decorator is a function that performs additional logic on a given function (i.e. it takes a function as input).
+  - A decorator also returns a function back as the result.
+  - If we always want to apply a particular decorator to a function we can do that using @\<decorator-function-name\>
+  - We can also do decorator chaining in Python. In such case, the decorator name that we will mention right on top of the function (closest to that function) will be applied first and then the output of that decorator will be passed to the other decorator function that is present on top of it.
+- Generators:
+  - Generators are functions that return a sequence of values back.
+  - A generator function is used just like any other function but it uses a 'yield' statement.
+  - As we generate our custom sequence using the 'yield' we will be storing each values in that sequence and at the end of the function or at the end of the sequence generation we will return the entire sequence back.
+  - A generator function is very similar to the range data type, but in this case you can come up with your own custom sequences like generation of random numbers or a sequence which is very specific to your application.
+
+```python
+# program: double the number returned by another function using a decorator function
+def decor(func):
+    def inner():
+        result = func()
+        return result * 2
+    return inner
+
+def num():
+    return 5
+
+result_func = decor(num)
+print(result_func())                            # 10
+print(decor(num)())                             # 10
+```
+
+```python
+# program: double the number returned by another function using a decorator function using @<decorator-function-name>
+def decor(func):
+    def inner():
+        result = func()
+        return result * 2
+    return inner
+
+@decor
+def num():
+    return 5
+
+print(num())                                    # 10
+```
+
+```python
+# program: demonstrate applying decorators on a method that returns a string
+def decorfunc(func):
+    def inner(nm):
+        return func(nm) + '! how are you?'
+    return inner
+
+@decorfunc
+def say_hello(name):
+    return 'Hello ' + name
+
+print(say_hello('Steven'))                      # Hello Steven! how are you?
+```
+
+```python
+# program: demonstrate the use of decorator chaining in python
+def square(func):
+    def inner():
+        result = func()
+        return result ** 2
+    return inner
+
+def half(func):
+    def inner():
+        result = func()
+        return result / 2
+    return inner
+
+@square
+@half
+def num1():
+    return 10
+
+@half
+@square
+def num2():
+    return 10
+
+print(num1())                                   # 25.0
+print(num2())                                   # 50.0
+```
+
+```python
+# program: create a custom sequence which has all the multiples of 5 from 1 to 100 using a generator function
+def custom_range_gen(x, y):
+    while x <= y:
+        if x % 5 == 0:
+            yield x
+        x += 1
+    
+gen_seq = custom_range_gen(1, 100)
+print(gen_seq)                                  # <generator object custom_range_gen at 0x110dea6d0>
+print(type(gen_seq))                            # <class 'generator'>
+lst = list(gen_seq)
+print(lst)                                      # [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100]
+```
+
+
