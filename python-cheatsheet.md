@@ -1797,4 +1797,116 @@ lst = list(gen_seq)
 print(lst)                                      # [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100]
 ```
 
+## Modules
 
+- Every Python script or Python file is a module. It is nothing but a group of functions, variables and classes saved into a file which can be reused across various other modules.
+
+```python
+# program: create a python module and reuse functions in it in other files
+# source: mymath.py (module)
+def sum(x, y):
+    return x + y
+
+def diff(x, y):
+    return x - y
+
+# source: calc1.py (file that uses the module)
+# first way to import modules
+import mymath
+
+print(mymath.sum(5, 10))                        # 15
+print(mymath.diff(10, 5))                       # 5
+
+# source: calc2.py
+# second way of importing modules with aliases
+import mymath as mm
+
+print(mm.sum(5, 10))
+print(mm.diff(10, 5))
+
+# source: calc3.py
+# third way of importing all the classes, functions and global variables from a module
+from mymath import *
+
+print(sum(5, 10))                               # 15
+print(diff(10, 5))                              # 5
+```
+
+```python
+# program: important methods and constants of math module
+from math import *
+
+print(sqrt(9))                                  # 3.0
+print(ceil(8.2))                                # 9
+print(floor(7.9))                               # 7
+
+# return the absolute value of float x
+print(fabs(-2.2))                               # 2.2          
+
+print(factorial(5))                             # 120
+print(gcd(2, 4, 12))                            # 2
+print(isnan(15.9))                              # False
+# print(isnan('12'))                            # TypeError: must be real number, not str
+
+# return the integer part of the square root of the input
+print(isqrt(8))                                 # 2
+
+print(lcm(4, 12, 16))                           # 48
+print(pow(2, 3))                                # 8.0
+print(pi)                                       # 3.141592653589793
+print(e)                                        # 2.718281828459045
+```
+
+```python
+# program: fetch and display all the members of a given module
+# dir(): returns all the members of a particular module
+# if you don't pass dir() any module it will return all the members of the current module within it is being invoked
+print(dir())                                    # ['__annotations__', '__builtins__', '__doc__', '__file__', '__loader__', '__name__', '__package__', '__spec__']
+```
+
+```python
+# program: demonstrate using dir() when we are importing all the members of another module into current module
+from math import *
+
+print(dir())                                    # ['__annotations__', '__builtins__', '__doc__', '__file__', '__loader__', '__name__', '__package__', '__spec__', 'acos', 'acosh', 'asin', 'asinh', 'atan', 'atan2', 'atanh', 'ceil', 'comb', 'copysign', 'cos', 'cosh', 'degrees', 'dist', 'e', 'erf', 'erfc', 'exp', 'expm1', 'fabs', 'factorial', 'floor', 'fmod', 'frexp', 'fsum', 'gamma', 'gcd', 'hypot', 'inf', 'isclose', 'isfinite', 'isinf', 'isnan', 'isqrt', 'lcm', 'ldexp', 'lgamma', 'log', 'log10', 'log1p', 'log2', 'modf', 'nan', 'nextafter', 'perm', 'pi', 'pow', 'prod', 'radians', 'remainder', 'sin', 'sinh', 'sqrt', 'tan', 'tanh', 'tau', 'trunc', 'ulp']
+```
+
+```python
+# program: demonstrate the use of dir() with a module name
+import math
+
+print(dir(math))                                # ['__doc__', '__file__', '__loader__', '__name__', '__package__', '__spec__', 'acos', 'acosh', 'asin', 'asinh', 'atan', 'atan2', 'atanh', 'ceil', 'comb', 'copysign', 'cos', 'cosh', 'degrees', 'dist', 'e', 'erf', 'erfc', 'exp', 'expm1', 'fabs', 'factorial', 'floor', 'fmod', 'frexp', 'fsum', 'gamma', 'gcd', 'hypot', 'inf', 'isclose', 'isfinite', 'isinf', 'isnan', 'isqrt', 'lcm', 'ldexp', 'lgamma', 'log', 'log10', 'log1p', 'log2', 'modf', 'nan', 'nextafter', 'perm', 'pi', 'pow', 'prod', 'radians', 'remainder', 'sin', 'sinh', 'sqrt', 'tan', 'tanh', 'tau', 'trunc', 'ulp']
+```
+
+```python
+# program: print the detailed documentation of a module using help()
+
+help(math)
+```
+
+```python
+# program: demonstrate different useful methods of random module
+from random import *
+
+# random() function will return a randomly generated floating point number between 0 and 1
+# random() function is non-inclusive (i.e. it will never include 0 or 1)
+print(random())                                 # 0.30112515266510365
+
+# randint() function will take two arguments and will always generate a random integer value between the given numbers
+# randint() function is inclusive (i.e. it may include <starting-no> or <ending-no> as well)
+print(randint(1, 50))                           # 28
+
+# uniform() function will take two arguments and will generate a random floating point value between the given numbers
+# uniform() function is non-inclusive (i.e. it will never include <starting-no> or <ending-no>)
+print(uniform(1, 50))                           # 14.927409699961348
+
+# randrange() function takes three arguments, first = the start, second = the stop and third = the step
+# randrange() function is non-inclusive from the end (i.e. it may include the starting number but it will never include the ending number)
+print(randrange(10))                            # 3
+print(randrange(1, 12))                         # 11
+print(randrange(1, 12, 2))                      # 5
+
+# choice() function is helpful in picking up a random value / item from the given sequence
+basket = ['apple', 'grape', 'orange', 'banana', 'mango']
+print(choice(basket))                           # mango
+```
