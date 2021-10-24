@@ -1910,3 +1910,73 @@ print(randrange(1, 12, 2))                      # 5
 basket = ['apple', 'grape', 'orange', 'banana', 'mango']
 print(choice(basket))                           # mango
 ```
+
+## List Comprehensions
+
+- List comprehensions gives us an easy to use syntax to create one list out of another while applying some logic and conditions.
+- Syntax: \<list-variable\> = [\<expression\> for \<item\> in \<iterable\> if \<condition\>]
+- expression: the logic that needs to be applied to each and every item of the list.
+- condition: this part is optional, only if this condition is satisfied then the particular item will be added into the resulting list.
+
+```python
+# program: create a list calculating the cube of integers from 1 to 10 using list comprehension
+lst1 = []
+lst2 = []
+
+# using regular programming
+for x in range(1, 11):
+    lst1.append(x ** 3)
+
+# using list comprehension
+lst2 = [x ** 3 for x in range(1, 11)]
+
+print(lst1)                                     # [1, 8, 27, 64, 125, 216, 343, 512, 729, 1000]
+print(lst2)                                     # [1, 8, 27, 64, 125, 216, 343, 512, 729, 1000]
+```
+
+```python
+# program: create a list of even numbers between 1 and 20 using list comprehension
+# first way
+lst1 = [x for x in range(2, 21, 2)]             # [2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
+
+# second way
+lst2 = [n for n in range(1, 21) if n % 2 == 0]  # [2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
+
+print(lst1)
+print(lst2)
+```
+
+```python
+# program: create a list by calculating the product of two different lists using list comprehnsion
+a = [1, 2, 3, 4, 5]
+b = [6, 7, 8, 9, 10]
+lst1 = []
+
+# using regular programming
+for i in range(len(a)):
+    lst1.append(a[i] * b[i])
+
+# using list comprehension
+lst2 = [a[i] * b[i] for i in range(len(a))]
+
+print(lst1)                                     # [6, 14, 24, 36, 50]
+print(lst2)                                     # [6, 14, 24, 36, 50]
+```
+
+```python
+# program: create a list by finding out the common elements of two given lists
+a = [2, 4, 6, 8, 10]
+b = [4, 9, 1, 2, 5]
+lst1 = []
+
+# using regular programming
+for i in a:
+    if i in b:
+        lst1.append(i)
+
+# using list comprehension
+lst2 = [i for i in a if i in b]
+
+print(lst1)                                     # [2, 4]
+print(lst2)                                     # [2, 4]
+```
