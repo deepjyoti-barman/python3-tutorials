@@ -1334,17 +1334,25 @@ else:
   - While writing a recursive function the very first step is to define a base / end condition, or it will run into an infinite loop.
   - Good place to use recursion is whenever the same logic is repeating in a program.
   - Recursion is not a good candidate for everything, because recursion could be very confusing for people who are reading our program.
-- Default Arguments:
+- Default arguments:
   - If a function is expecting n arguments and we pass less than n arguments to that function Python interpreter will throw an error, in such cases using default arguments can prove out to be very handy.
   - We can pass in and set default (argument) values for any types.
   - As soon as you pass in a parameter automatically its value will be used, i.e. the default value will not be used.
-- Variable / Optional Arguments:
+- Variable / optional arguments:
   - When we don't know the exact number of parameters that a function should accommodate at the time of defining the function, optional arguments can prove out to be very handy.
   - If we name the optional positional argument *args, all extra positional parameters passed into the function will be stored into 'args' as a tuple
   - Name of the optional positional argument can be anything i.e. *args, *pos_params etc, ultimately it's the * which matters.
   - If we name the optional keyword argument **kwargs, all extra keyword parameters passed into the function will be stored into 'kwargs' as a dict.
   - Name of the optional keyword argument can be anything i.e. **kwargs, **key_params etc, ultimately it's the ** which matters.
   - We can pass the optional positional and keyword arguments to other functions and can alter them in between.
+- Function annotations
+  - Function annotations introduced in Python 3.0 adds a feature that allows you to add arbitrary metadata to function parameters and return value.
+  - Since python 3, function annotations have been officially added to python (PEP-3107). The primary purpose was to have a standard way to link metadata to function parameters and return value.
+  - Function annotations, both for parameters and return values, are completely optional.
+  - Function annotations are nothing more than a way of associating arbitrary Python expressions with various parts of a function at compile-time.
+  - The PEP-3107 makes no attempt to introduce any kind of standard semantics, even for the built-in types. All this work left to the third-party libraries.
+  - The Python runtime does not enforce function and variable type annotations. They can be used by third party tools such as type checkers, IDEs, linters, etc.
+  - Syntax: def func(arg: arg_type, optarg: arg_type = default) -> return_type:
   
 
 ```python
@@ -1586,6 +1594,17 @@ func1(10, 20, 'abc', name='Erik', sal=50.5)     # from func1()
                                                 # from func2()
                                                 # extra positional params = (20, 'abc', 77.5)
                                                 # extra keyword params = {'name': 'Erik', 'sal': 50.5, 'id': 4}
+```
+
+```python
+# program: demonstrate the use of function annotation in Python
+def sum(a: int, b: int) -> int:
+    return a + b
+
+print(sum(2, 3))                                # 5
+
+# the following function call won't give an error, IDE's will provide warning based on type we have set on the function signature
+print(sum('x', 'y'))                            # xy
 ```
 
 ## Lambdas
@@ -1980,3 +1999,377 @@ lst2 = [i for i in a if i in b]
 print(lst1)                                     # [2, 4]
 print(lst2)                                     # [2, 4]
 ```
+
+## Object Oriented Programming in Python
+
+- Objects will have properties:
+  - Identity / name
+  - Properties / variables (age, height, weight etc. of a person)
+  - Functionality / behaviors(look(), speak(), walk() etc.)
+- An object communicate with each other using their functionality or behavior and when they do that communication they exchange the information via properties or variables.
+- The main advantage of object oritentd programming languages is that it's very easy to represent real world problems when we deveop software solutions using the object oriented programming languages.
+- Example of objects:
+  - E-commerce application: Customer, Order, Product, Address, Payment, Shopping card etc.
+  - Hospital management application: Patient, Appointment, Doctor, Prescription, Billion, Insurance and Claims and more.
+- Four key object oriented principles are:
+  - Encapsulation
+  - Inheritance
+  - Abstraction
+  - Polymorphism
+- Class and objects:
+  - Classes allow us to create our own data types that is user defined data types.
+  - A class act as a blueprint for our objects, just like we have blueprints when we build houses and once we have blueprint we can create any number of similar objects.
+  - According to the old OOP concept, a class represents a blueprint where all the fields and methods of a particular object are defined.
+  - Example: (class) Product [id, name, price], (objects) obj1 [id=2, name=john, price=10], obj2 [id=3, name=bob, price=123]
+- Methods vs Constructors:
+  - Name of a method can be anything, whereas name of a constructor should always be \_\_init\_\_.
+  - Method is executed when it is invoked using the object, whereas constructor is invoked automatically by the Python runtime when the object is created.
+  - Method can be invoked any number of times using the object of that class, whereas the constructor is only invoked once per object when the object is created.
+  - Inside the methods we write some business logics, whereas we use the constructor to declare and initialize the variables of that class.
+- Instance method vs Class method vs Static method
+  - Instance method works with instance variables (set, get or perform some calculations on these variables), class method works with class variables and static method works with none of them. Static method works as a utility method where if you want to bring in some extra functionality into picture which has nothing to do with the class you can use static methods.
+  - Instance method has self as its first parameter, class method has cls as its first parameter, static method take no parameters.
+  - We can define an intance method without any decorator, class method can be defined with a decorator named @classmethod and static method can be defined with a decorator called @staticmethod.
+  - Instace method can have access of instance variables (uses self to access) as well as class or static variables with the help of class name, but class method or static method can never have the access of instance variables, they can only have the access of class or static variables (class method uses cls, static method uses class name to access).
+- Garbage collection:
+  - In programming languages like C or C++, we have to ensure that the memory we allocate within our program for our objects is being allocated or destoyed. Otherwise, all the memory will be used up and our program will be crashing at some point.
+  - In Python, we don't have to think about Garbage collection. There is a garbage collector that keeps on running in the background as a part of the Python runtime and it will clean up our objects when the program is done and when the objects are no longer used.
+  - If a particular object does not have any more references, then automatically the memory allocated to that object will be cleaned up by the garbage collector that runs in the background.
+  - It also allows us to write destructors using \_\_del\_\_. Within this method we can write the clean up logic and this method will be invoked by the garbage collector before it cleans up or destroys the memory that is allocated to that particular object so that we can write the cleanup code here.
+  - e.g. if we open a database connection in the constructor requried for our program, we can cleanup that database connection in this destructor method.
+
+```python
+# program: demonsrate the use of classes and objects in Python with a simple example
+class Product:
+    # __init__ is the in-built constructor method which is availiable for all the classes
+    # a constructor method is used to initialize properties of the class
+    # the constructor method will take only one parameter - self
+    # self points to the current object that is being created of this particular class
+    # using self we can declare and assign the values for the class fields.
+    def __init__(self):
+        self.name = 'iPhone 13'
+        self.description = 'Best smartphone in 2021'
+        self.price = 700
+
+prod1 = Product()
+print(prod1.name)                               # iPhone13
+print(prod1.description)                        # Best smartphone in 2021
+print(prod1.price)                              # 700
+
+prod2 = Product()
+print(prod2.name)                               # iPhone 13
+print(prod2.description)                        # Best smartphone in 2021
+print(prod2.price)                              # 700
+```
+
+```python
+# program: demonstrate the use of parameterized constructor in Python
+class Course:
+    def __init__(self, name, rate):
+        self.name =  name
+        self.ratings = rate
+
+c1 = Course("Core Java", [1, 2, 3, 4, 5])
+print(c1.name)                                  # Core Java
+print(c1.ratings)                               # [1, 2, 3, 4, 5]
+
+c2 = Course("Java Web Services", [5, 5, 5, 5, 5])
+print(c2.name)                                  # Java Web Services
+print(c2.ratings)                               # [5, 5, 5, 5, 5]
+```
+
+```python
+# program: demonstrate the use of instance methods in Python
+class Course:
+    def __init__(self, name, rate):
+        self.name =  name
+        self.ratings = rate
+    
+    # print the average ratings of each course
+    def average(self):
+        no_of_ratings = len(self.ratings)
+        average = sum(self.ratings) / no_of_ratings
+        print('Average ratings for', self.name, 'is', average)
+
+c1 = Course("Core Java", [1, 2, 3, 4, 5])
+print(c1.name)                                  # Core Java
+print(c1.ratings)                               # [1, 2, 3, 4, 5]
+c1.average()                                    # Average ratings for Core Java is 3.0
+
+c2 = Course("Java Web Services", [5, 5, 5, 5, 5])
+print(c2.name)                                  # Java Web Services
+print(c2.ratings)                               # [5, 5, 5, 5, 5]
+c2.average()                                    # Average ratings for Java Web Services is 5.0
+```
+
+```python
+# program: demonstrate the use of getter / accessor and setter / mutator methods in Python
+class Programmer:
+    # setter methods - used to set the values of instance variables
+    def set_name(self, name):
+        self.name = name
+    
+    def set_salary(self, sal):
+        self.salary = sal
+
+    def set_technologies(self, techs):
+        self.technologies = techs
+
+    # getter methods - used to get the values of the instance variables
+    def get_name(self):
+        return self.name
+
+    def get_salary(self):
+        return self.salary
+
+    def get_technologies(self):
+        return self.technologies
+
+p1 = Programmer()
+p1.set_name('Franko')
+p1.set_salary(10000)
+p1.set_technologies(['Java', 'Spring Boot', 'Python', 'C#'])
+
+print(p1.get_name())                            # Java
+print(p1.get_salary())                          # 10000
+print(p1.get_technologies())                    # ['Java', 'Spring Boot', 'Python', 'C#']
+```
+
+```python
+# program: define and use static or class level fields in a Python program
+class Student:
+    # static or class level variable which will have same value for all the objects of the class
+    # we can also access the static variable directly without creating any object with the help of class name (i.e. <classname>.<static-var-name>)
+    branch = 'CSE'
+
+    def __init__(self, name, roll_no):
+        self.name = name
+        self.roll_no = roll_no
+
+s1 = Student('George', 1)
+s2 = Student('Henry', 2)
+
+print(s1.name)                                  # George
+print(s1.branch)                                # CSE
+print(Student.branch)                           # CSE
+print(s1.roll_no)                               # 1
+
+print(s2.name)                                  # Henry
+print(s2.branch)                                # CSE
+print(s2.roll_no)                               # 2
+```
+
+```python
+# program: demonstrate the use of static methods in Python by creating a program which will count the number of objects created
+class ObjectCounter:
+    no_of_objects = 0
+
+    def __init__(self):
+        ObjectCounter.no_of_objects += 1
+
+    # We need to mark a static method with @staticmethod decorator
+    # static method does not have access to self variable
+    @staticmethod
+    def display_obj_count():
+        print(ObjectCounter.no_of_objects)
+
+obj1 = ObjectCounter()
+obj2 = ObjectCounter()
+ObjectCounter.display_obj_count()               # 2
+```
+
+```python
+# program: demonstrate the use of instance method, class method and static method in Python
+class Student:
+    institution_name = 'QSpiders'
+    institution_desc = 'Testing training institute'
+
+    def __init__(self, id, name, phone):
+        self.id = id
+        self.name = name
+        self.phone = phone
+    
+    def set_name(self, name):
+        self.name = name
+
+    def set_phone(self, phone):
+        self.phone = phone
+
+    @classmethod
+    def set_institution_details(cls, inst_name, inst_desc):
+        cls.institution_name = inst_name
+        cls.institution_desc = inst_desc
+    
+    def display_details(self):
+        print(Student.institution_name)
+        print(Student.institution_desc)
+        print(self.id)
+        print(self.name)
+        print(self.phone)
+
+    @staticmethod
+    def info():
+        print('Class built for creating Student objects of', Student.institution_name, '-', Student.institution_desc)
+
+s1 = Student(1, 'Olivia', '+91-9876512345')
+s1.display_details()                            # QSpiders
+                                                # Testing training institute
+                                                # 1
+                                                # Olivia
+                                                # +91-9876512345
+
+s2 = Student(2, 'Joseph', '+91-8987212783')
+# s2.set_institution_details('PySpiders', 'Python training institute')
+Student.set_institution_details('PySpiders', 'Python training institute')
+s2.display_details()                            # PySpiders
+                                                # Python training institute
+                                                # 2
+                                                # Joseph
+                                                # +91-8987212783
+s2.info()                                       # Class built for creating Student objects of PySpiders - Python training institute
+Student.info()                                  # Class built for creating Student objects of PySpiders - Python training institute
+```
+
+```python
+# program: demonstrate the use of inner classes in Python
+class Car:
+    def __init__(self, make, year):
+        self.make = make
+        self.manufacturing_year = year
+
+    class Engine:
+        def __init__(self, eng_no):
+            self.engine_no = eng_no
+        
+        def start(self):
+            print('Broooooom!! the car is ready for the drive...')
+        
+car_obj = Car('BMW', 2017)
+
+# to create an instance of the inner class we need to use / refer the object of the outer class
+engine_obj = car_obj.Engine('89029977167135')
+engine_obj.start()                              # Broooooom!! the car is ready for the drive...
+```
+
+```python
+# program: demonstrate how to enable and disable garbage collection (rarely used in realtime applications)
+import gc
+
+# By default garbage collection is enabled
+print(gc.isenabled())                           # True
+
+# once garbage collection is disabled, no object will be garbage collected - we will have to somehow clear up that memory or resource
+gc.disable()
+print(gc.isenabled())                           # False
+gc.enable()
+print(gc.isenabled())                           # True
+```
+
+```python
+# program: demonstrate the use of destructor in Python
+class Product:
+    def __init__(self):
+        self.name = 'iPhone 13'
+        self.description = 'Best smartphone in 2021'
+        self.price = 700
+    
+    # the destructor method is placed right after the constructor
+    # destruct method has access to all the object fields and any clean up code should go here
+    # just before the garbage collector cleans up the memory allocated to our objects of this class, the destructor will be invoked
+    def __del__(self):
+        print('Destructor method invoked...')
+
+    def display(self):
+        print(self.name)
+        print(self.description)
+        print(self.price)
+
+prod1 = Product()
+prod1.display()                                 # iPhone 13
+                                                # Best smartphone in 2021
+                                                # 700
+
+# enforce the garbage collector / destructor call for object 'prod1' right here
+prod1 = None                                    # Destructor method invoked...
+
+prod2 = Product()
+prod2.display()                                 # iPhone 13
+                                                # Best smartphone in 2021
+                                                # 700
+
+# enforce the garbage collector / destructor call for object 'prod2' right here
+prod2 = None                                    # Destructor method invoked...
+```
+
+### Encapsulation
+
+- Encapsulation is a process of protecting the properties and the functionalities of an object from other objects.
+- Class here works as the capsule, binds its properties and functionalities together.
+- In the process of encapsulation, data / properties of the object is made non-modifiable from outside the class. This is done by making the fields / properties / variables private.
+- If other objects want to access this data, then they always have to go through these methods and functionalities to access the data of the object.
+- Another definition for encapsulation is writing the data and the code into one single unit.
+
+```python
+# program: demonstrate marking a field / property as a private variable and accessing it using name mangling
+class Student:
+    def __init__(self, id, name):
+        # defining private fields prefixing it with double underscore
+        self.__id = id
+        self.__name = name
+    
+    # accessor method for private variables
+    def display(self):
+        print(self.__id)
+        print(self.__name)
+
+s = Student(3, 'Nathan')
+
+# accessing or modifying the fields outside the class is prohibited, because they are made private
+# print(s.__id)                                 # AttributeError: 'Student' object has no attribute '__id'
+# print(s.__name)                               # AttributeError: 'Student' object has no attribute '__name'
+
+# now we can only access and display their values using the methods of the class
+s.display()                                     # 3
+                                                # Nathan
+
+# In Python when you make fields or method private they are not completely hidden, they are stored in the form of _<classname>__<private-var-name>
+s._Student__name = 'Miller'
+print(s._Student__id)                           # 3
+print(s._Student__name)                         # Miller
+s.display()                                     # 3
+                                                # Miller
+```
+
+```python
+# program: demonstrate how to implement encapsulation in Python
+class Student:
+    def __init__(self, id, name):
+        self.__id = id
+        self.__name = name
+
+    # setters / mutators
+    def set_id(self, id):
+        self.__id = id
+    
+    def set_name(self, name):
+        self.__name = name
+    
+    # getters / accessors
+    def get_id(self):
+        return self.__id
+
+    def get_name(self):
+        return self.__name
+
+s = Student(4, 'Tyler')
+print(s.get_id())                               # 4
+print(s.get_name())                             # Tyler
+s.set_id(5)
+s.set_name('Bruno')
+print(s.get_id())                               # 5
+print(s.get_name())                             # Bruno
+```
+
+### Inheritance
+
+- Inheritance is the process of defining a new object with the help of an existing object.
