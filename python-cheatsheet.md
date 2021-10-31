@@ -2744,3 +2744,337 @@ fseries.drive()                                 # Five series is being driven
 ```
 
 ## Exception Handling, Assertions and Logging
+
+- Exceptions are runtime errors raised when our Python program is executing and something goes wrong.
+- If we do not handle the exception correct in our application it will cost three things:
+  - Abnormal termination of program (wherever the exception is raised the program will stop right there, the code after that line will not be executed)
+  - Python virtual machine will display unfriendly exception informtion to the end user.
+  - Improper shutdown of the resources (if we have resources like database connections or file streams or network connection we have opened up in our application and if we are not closing them before the part where the exception is raised in our application then those will not be closed)
+  - In Python exception is represented using a class and there are different types of inbuilt exceptions that we can use in our application. As well as we can define our own exception types and use them for our business needs.
+  - To handle an exception we will wrap the code which might cause an exception inside the try and except block. If anything goes wrong in try block, the code then will enter the except block, we will handle the exception here by displaying a user friendly message and the code execution will then continue after the except block.
+  - Optionally the try and exception can also have an else block which will be executed if an exception is not raised.
+  - Finally will be executed no matter whether there is an exception or not (used for cleanup code like database connection closing, file stream closing etc).
+- In Python exception is represented as an object of a particular class. So each exception is represented as a class and objects of that class will be created when an exception is raised.
+- Parent of all these exception classes is the BaseException, which is inherited by Exception class and this Exception class is inherited by standard errors that happen at runtime and also warnings that can be shown at runtime.
+  - BaseException
+  - BaseException -> Exception
+  - Exception -> StandardError
+  - Exception -> Warning
+  - StandardError -> EOFError, ZeroDivisionError, IndentationError
+  - Warning -> DepricatedWarning, ImportWarning
+
+```python
+# program: demonstrate exception handling with a suitable example
+try:
+    a, b = [int(x) for x in input('Enter two number: ').split()]    # Enter two number: 4 0
+    c = a / b
+    print(c)
+except ZeroDivisionError:
+    print('Division by zero is not allowed')    # Division by zero is not allowed
+    print('Please enter a non-zero number')     # Please enter a non-zero number
+print('Code after the exception')               # Code after the exception
+```
+
+```python
+# program: demonstrate the use of finally block
+try:
+    f = open('myfile.txt', 'w')
+    a, b = [int(x) for x in input('Enter two number: ').split()]    # Enter two number: 4 0
+    c = a / b
+    f.write('Writing %d into file' % c)
+except ZeroDivisionError:
+    print('Division by zero is not allowed')    # Division by zero is not allowed
+    print('Please enter a non-zero number')     # Please enter a non-zero number
+# finally gets executed irrespective of the fact that exception has raised or not    
+finally:
+    f.close()
+    print('File is closed')                     # File is closed
+print('Code after the exception')               # Code after the exception
+```
+
+```python
+# program: demonstrate the use of else block
+try:
+    f = open('myfile.txt', 'w')
+    a, b = [int(x) for x in input('Enter two number: ').split()]    # Enter two number: 4 2
+    c = a / b
+    f.write('Writing %d into file' % c)
+except ZeroDivisionError:
+    print('Division by zero is not allowed')
+    print('Please enter a non-zero number')
+# else gets executed if the exception is not raised
+else:
+    print('You have entered non-zero numbers')  # You have entered non-zero numbers
+finally:
+    f.close()
+    print('File is closed')                     # File is closed
+print('Code after the exception')               # Code after the exception
+```
+
+```python
+# program: demonstrate creating and raising custom exceptions in Python
+class OverTheLimitException(Exception):
+    def __init__(self, msg):
+        self.msg = msg
+
+def withdrawl(amount):
+    if (amount > 500):
+        raise OverTheLimitException('You can not withdraw more than 500$ per day')
+
+withdrawl(600)                                  # OverTheLimitException: You can not withdraw more than 500$ per day
+```
+
+```python
+# program: demonstrate logging with a suitable example
+import logging
+
+logging.critical('Critical')                    # CRITICAL:root:Critical
+logging.error('Error')                          # ERROR:root:Error
+logging.warning('Warning')                      # WARNING:root:Warning
+# The default log level in Python is Warning - so logger will log the messages that are above it.
+# By default the logger will output the text on console, we can configure to log messages into file as well
+logging.info('Info')
+logging.debug('Debug')
+```
+
+```python
+# program: demonstrate changing the default logging configuration with a suitable example
+import logging
+
+logging.basicConfig(filename='mylog.log', level=logging.DEBUG)
+logging.critical('Critical')                    # CRITICAL:root:Critical
+logging.error('Error')                          # ERROR:root:Error
+logging.warning('Warning')                      # WARNING:root:Warning
+logging.info('Info')                            # INFO:root:Info
+logging.debug('Debug')                          # DEBUG:root:Debug
+```
+
+```python
+# program: demonstrate the practical use of logging in a program
+import logging
+
+logging.basicConfig(filename='mylog.log', level=logging.DEBUG)
+
+try:
+    a, b = [int(x) for x in input('Enter two number: ').split()]    # Enter two number: 4 0
+    logging.info('Taking inputs from the user successful')          # INFO:root:Taking inputs from the user successful
+    c = a / b
+    logging.info('Division successful')
+    print(c)
+except ZeroDivisionError:
+    logging.error('exception has occurred, exception handling in progress') # ERROR:root:exception has occurred, exception handling in progress
+    print('Division by zero is not allowed')    # Division by zero is not allowed
+    print('Please enter a non-zero number')     # Please enter a non-zero number
+print('Code after the exception')               # Code after the exception
+```
+
+```python
+# program: demonstrate the use assertions with a suitable example
+try:
+    num = int(input('Enter an even number: '))  # Enter an even number: 5    
+
+    # the assertion message will be printed if the assertion is failed
+    assert num % 2 == 0, 'You have entered an invalid input or odd number'
+except AssertionError as ae:
+    print(ae)                                   # You have entered an invalid input or odd number
+
+print('After the assertion')                    # After the assertion
+```
+
+## Files
+
+- Files are where we organize or store our data.
+- This data could be,
+  - Text data
+  - Binary data (images, video or audio files)
+- Syntax: To open file: `f = open('filename', 'mode', '<buffer>')`
+  - f = File object
+  - filename: Filename / file path
+  - mode = Read, write, append etc.
+  - buffer = It is an optional parameter, it is a number / integer value that we pass in, which internally does buffering when read or write data into a file. If you don't pass in any number by default 4096 or 8092 will be used by the Python virtual machine.
+  - Read mode (r) = Used to read the data from a file.
+  - Write mode (w) = Used to create a new file if the file does not exist, if the file exists then it erases all the data in it and then start writing data from the beginning of the file.
+  - Append mode (a) = Used to create a new file if the file does not exist, if the file exists then it starts writing data from the end of the file.
+  - w+ = Write and read (overwrites the file if it exists).
+  - r+ = Read and write.
+  - a+ = Append and read.
+  - x = Exclusive creation mode, once you create a file in this mode a new file will be created for you exclusively and if a file already exists with the same exact name then an error will be thrown.
+  - All the modes shown above works with text files, in case you are working with binary files append 'b' with the mode (i.e. 'wb', 'rb+' etc.)
+- Syntax: To close file: `f.close()`
+
+```python
+# program: writing characters to a file
+f = open('myfile.txt', 'w')
+
+s = input('Enter text that you want to write in the file: ')
+f.write(s)
+
+f.close()
+```
+
+```python
+# program: read contents from a file
+f = open('myfile.txt', 'r')
+
+# read() method will give the contents one line at a time
+s = f.read()
+print(s)
+
+f.close()
+```
+
+```python
+# program: writing long texts into a file
+f = open('myfile.txt', 'w')
+
+print('Enter text (Type # when you are done): ')
+s = ''
+while s != '#':
+    s = input()
+
+    # to discard writing the # character
+    if s != '#':
+        f.write(s + '\n')
+
+f.close()
+```
+
+```python
+# program: demonstrate reading contents from a file only if it exists
+import os, sys
+
+# isfile() method returns a boolean true if the file exists, if not it returns false
+if os.path.isfile('myfile.txt'):
+    f = open('myfile.txt', 'r')
+else:
+    print('Given file does not exist')
+    sys.exit()
+
+s = f.read()
+print(s)
+
+f.close()
+```
+
+```python
+# program: demonstrate serializing an object into a file using pickle module
+# filename: student.py
+class Student:
+    def __init__(self, id, name, testscore):
+        self.id = id
+        self.name = name
+        self.testscore = testscore
+    
+    def display(self):
+        print(self.id, self.name, self.testscore)
+
+# filename: pickledump.py
+# serializing (pickle) the object of student class
+import pickle, student
+
+f = open('student.dat', 'wb')
+stud = student.Student(1, 'Joel', 91)
+pickle.dump(stud, f)
+
+f.close()
+```
+
+```python
+# program: demonstrate deserializing an object from a file using pickle
+import pickle
+
+# filename: pickleload.py
+# de-serializing (unpickle) the object of student class
+f = open('student.dat', 'rb')
+stud = pickle.load(f)
+stud.display()
+
+f.close()
+```
+
+## Regular Expressions
+
+- Regular expressions are also known as regex.
+- Regular expression is a pattern that we create to search for a string with a given string or to validate the given string to see if it follows the given pattern (validate email, validate strength of a password)
+- To use regular expressions we import a module 're' which has important methods like match(), search(), findall(), split(), sub() etc.
+- The regular expression syntax define some special characters called sequence characters that we can use to match a single character in a given string.
+  - \d: Matches any digit i.e. 0 to 9.
+  - \D: Matches any character that is non-digit.
+  - \s: Matches a whitespace in a given string.
+  - \S: Matches a non-whitespace in a given string.
+  - \w: Matches any alphanumeric value (letter, digit or underscore).
+  - \W: Matches any non-alphanumeric value
+  - \b: Matches only the beginning or end of the word (space around words).
+  - \A: Matches only at the start of the string
+  - \Z: Matches only at the end of the string
+  - \t: Matches tab
+  - \n: Matches newline
+  - \r: Matches return
+  - ^: Matches a pattern at the start of the string.
+  - $: Matches a pattern at the end of the string.
+- Quantifiers can be used to match multiple characters.
+  - .: Matches any single character except the newline character.
+  - +: one or more repititions of the preceeding regular expression.
+  - *: zero or more repititions of the preceeding regular expression.
+  - ?: zero or one repitition of the preceeding regular expression.
+  - {m}: Exactly m occurrences of the preceeding regular expression.
+  - {m, n}: m = minimum no of occurrences, n = maximum no of occurrences of the preceeding regular expression. By default m = 0 and n = infinity.
+  - []: Matches the set of characters you specify within it.
+  - (): Creates a group when performing matches.
+  - <>: Creates a named group when performing matches.
+- For more info visit: <https://www.datacamp.com/community/tutorials/python-regular-expression-tutorial>
+
+```python
+# program: Find the first substring in a given string that starts with 'o' and is of length 2
+import re
+
+# search(): searches the format in the given string and returns the very first sub-string within the given string that matches the pattern.
+# group(): returns the string matched by the regular expression.
+s = 'Sitting on the chair he is thinking of the life he has lead in the past'
+result = re.search(r'o\w', s)
+print(type(result))                             # <class 're.Match'>
+
+# safety check we can not call the group() method on None type
+if result != None:
+    print(result.group())                           # on
+```
+
+```python
+# program: Find all the occurrences of a substing in a given string that starts with 'o' and is of length 2
+import re
+
+# findall(): finds all the possible matches in the entire sequence and returns them as a list of strings. If no match found then empty list is returned.
+# match(): returns a match object if the text matches the pattern. Otherwise, it returns None.
+# match() function checks for a match only at the beginning of the string (by default), whereas the search() function checks for a match anywhere in the string.
+s = 'Sitting on the chair he is thinking of the life he has lead in the past'
+result = re.findall(r'o\w', s)
+print(result)                                   # ['on', 'of']
+
+result = re.match(r'o\w', s)
+print(result)                                   # None
+
+result = re.match(r'S\w', s)
+if result != None:
+    print(result.group())                       # Si
+```
+
+```python
+# program: demonstrate the method split() with a suitable example
+import re
+
+# split(): splits the given string into a list of strings using the regular expression that we pass in a delimiter
+s = 'Hello1how123are345you?'
+result = re.split(r'\d+', s)
+print(result)                                   # ['Hello', 'how', 'are', 'you?']
+```
+
+```python
+# program: demonstrate the use of sub() method with a suitable example
+import re
+
+# sub(): the sub method does a replace all, it will substitute the given string with a new string
+# syntax: re.sub(r'regex_to_match', 'str_to_replace', str)
+s = 'Sitting on the chair he is thinking of the life he has lead in the past'
+result = re.sub(r'on', 'in', s)                 # Sitting in the chair he is thinking of the life he has lead in the past
+print(result)
+```
