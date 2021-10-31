@@ -2373,3 +2373,374 @@ print(s.get_name())                             # Bruno
 ### Inheritance
 
 - Inheritance is the process of defining a new object with the help of an existing object.
+- IPhone 13 accesses the existing object IPhone 12's functionality and updates / upgrades on top of whatever functionality is there already.
+- Inheritance bring in code reusablity.
+- Inheritance is also know as IS-A relationship (Vehicle -> Car, Car -> BMW, Car -> AUDI, so Car is a Vehicle and AUDI is a Car brand)
+- Sometimes in our child class we want to use the same exact method name which got inherited from the parent class but providing a different functionality. This phenomenon is called method overriding or method shadowing. Simple way, using the same exact signature for a method in the child class but providing a different functionality is called overriding.
+- super() method in Python serves two different functionalities:
+  - It is used to invoke parent class's constructor (no need to pass self as an argument this time).
+  - It is used to invoke parent class's methods.
+
+```python
+# program: demonstrate inheriting properties of a class into its subclass with a program
+class BMW:
+    def __init__(self, make, model, year):
+        self.make = make
+        self.model = model
+        self.year = year
+
+class ThreeSeries(BMW):
+    def __init__(self, make, model, year, cruise_control_enabled):
+        # the first line inside a child class's constructor is to invoke the parent class's constructor
+        BMW.__init__(self, make, model, year)
+        self.cruise_control_enabled = cruise_control_enabled
+
+class FiveSeries(BMW):
+    def __init__(self, make, model, year, parking_assist_enabled):
+        # the first line inside a child class's constructor is to invoke the parent class's constructor
+        BMW.__init__(self, make, model, year)
+        self.parking_assist_enabled = parking_assist_enabled
+
+tseries = ThreeSeries('BMW', '328i', '2018', True)
+print(tseries.make)                             # BMW
+print(tseries.model)                            # 328i
+print(tseries.year)                             # 2018
+print(tseries.cruise_control_enabled)           # True
+```
+
+```python
+# program: demonstrate inheriting functionalities of a class into its subclass with a program
+class BMW:
+    def __init__(self, make, model, year):
+        self.make = make
+        self.model = model
+        self.year = year
+
+    # the two following methods are available for three classes - BMW, ThreeSeries and FiveSeries
+    def start(self):
+        print('Starting the car')
+
+    def stop(self):
+        print('Stopping the car')
+
+class ThreeSeries(BMW):
+    def __init__(self, make, model, year, cruise_control_enabled):
+        BMW.__init__(self, make, model, year)
+        self.cruise_control_enabled = cruise_control_enabled
+
+    # the following method is available only to ThreeSeries
+    def display_cce(self):
+        print(self.cruise_control_enabled)
+
+class FiveSeries(BMW):
+    def __init__(self, make, model, year, parking_assist_enabled):
+        BMW.__init__(self, make, model, year)
+        self.parking_assist_enabled = parking_assist_enabled
+
+tseries = ThreeSeries('BMW', '328i', '2018', True)
+tseries.start()                                 # Starting the car
+tseries.stop()                                  # Stopping the car
+tseries.display_cce()                           # True
+```
+
+```python
+# program: demonstrate overriding with a suitable example
+class BMW:
+    def __init__(self, make, model, year):
+        self.make = make
+        self.model = model
+        self.year = year
+
+    def start(self):
+        print('Starting the car')
+
+    def stop(self):
+        print('Stopping the car')
+
+class ThreeSeries(BMW):
+    def __init__(self, make, model, year, cruise_control_enabled):
+        BMW.__init__(self, make, model, year)
+        self.cruise_control_enabled = cruise_control_enabled
+
+    def start(self):
+        print('Automatically starting the car using a remote')
+
+class FiveSeries(BMW):
+    def __init__(self, make, model, year, parking_assist_enabled):
+        BMW.__init__(self, make, model, year)
+        self.parking_assist_enabled = parking_assist_enabled
+
+tseries = ThreeSeries('BMW', '328i', '2018', True)
+tseries.start()                                 # Automatically starting the car using a remote
+```
+
+```python
+# program: demonstate the use of super() function in Python
+class BMW:
+    def __init__(self, make, model, year):
+        self.make = make
+        self.model = model
+        self.year = year
+
+    def start(self):
+        print('Starting the car')
+
+    def stop(self):
+        print('Stopping the car')
+
+class ThreeSeries(BMW):
+    def __init__(self, make, model, year, cruise_control_enabled):
+        # using super() to call parent class's constructor
+        super().__init__(make, model, year)
+        self.cruise_control_enabled = cruise_control_enabled
+
+    def start(self):
+        # using super() to call parent class's method
+        super().start()
+        print('Automatically starting the car using a remote')
+
+class FiveSeries(BMW):
+    def __init__(self, make, model, year, parking_assist_enabled):
+        super().__init__(make, model, year)
+        self.parking_assist_enabled = parking_assist_enabled
+
+tseries = ThreeSeries('BMW', '328i', '2018', True)
+tseries.start()                                 # Starting the car
+                                                # Automatically starting the car using a remote
+```
+
+### Polymorphism
+
+- Poly = multi and morphics = shapes, in the world the object orited programming this shape is replaced with behavior.
+- If we can have different types of behavior based on the data or the objects - that the functions are dealing with then this is called Polymorphism.
+- In Python we can implement Polymorphism in different ways:
+  - Using duck typing
+  - Using duck typing to do dependency injection
+  - Operator overloading (+)
+  - Method overriding
+- Method overloading is not supported by Python, we have other work arounds to build the same kind of functionality in Python.
+- Duck typing is not really a feature that a programming language offers but it comes for free if a programming language is dynamic in nature.
+- Dependency injection is nothing but simply injecting an object into another object as required. Example: A flight needs an engine to fly, we can inject different types of engines like Airbus manufactured engine or Boing manufactured engine into the flight object dynamically. To achieve this in Java - a. create interface called Engine, b. AirbusEngine and BoringEngine class should implement Engine interface, c. use the interface inside the object as a field (Generalization). In Python we can simply achieve this using duck typing.
+- + operator in Python is polymorphic in nature. Because,
+  - If you use it on two numbers, it will add them.
+  - If you use it on two string, it will append them.
+  - If you use it on two lists, it make a single list out of the given two lists.
+
+```python
+# program: demonstrate duck typing in Python with a suitable example
+class Duck:
+    def talk(self):
+        print('Quack quack')
+
+class Human:
+    def talk(self):
+        print('Hello')
+
+def callTalk(obj):
+    obj.talk()
+
+duck = Duck()
+human = Human()
+
+# Here the same function can do multiple things / the same function is behaving differently depending on the object that we pass to it dynamically at the runtime. This dynamic nature of passing parameters is known as duck typing.
+callTalk(duck)                                  # Quack quack
+callTalk(human)                                 # Hello
+```
+
+```python
+# program: demonstrate dependency injection in Python with a suitable example
+class Flight:
+    def __init__(self, engine_obj):
+        # implementing dependency injection
+        self.engine = engine_obj
+    
+    def start_engine(self):
+        # assuming that the engine object is going to have a method start()
+        self.engine.start()
+
+class AirbusEngine:
+    def start(self):
+        print('Starting Airbus engine')
+
+class BoingEngine:
+    def start(self):
+        print('Starting Boing engine')
+
+airbus = AirbusEngine()
+boing = BoingEngine()
+
+# we can directly pass objects like this without Generaliztion - without any parent class obj / interface reference unlike Java because of duck typing
+flight_obj1 = Flight(airbus)
+flight_obj2 = Flight(boing)
+
+flight_obj1.start_engine()                      # Starting Airbus engine 
+flight_obj2.start_engine()                      # Starting Boing engine
+```
+
+```python
+# program: demonstrate the polymorphic behaviors of + operator in Python
+# usage on numbers
+a = 10
+b = 20
+print(a + b)                                    # 30
+
+# usage on strings
+s1 = 'Hello!'
+s2 = ' How are you?'
+print(s1 + s2)                                  # Hello! How are you?
+
+# usage on lists
+l1 = [1, 2, 3]
+l2 = [4, 5, 6]
+print(l1 + l2)                                  # [1, 2, 3, 4, 5, 6]
+```
+
+```python
+# program: demonstrate method overriding / runtime polymorphism in Python
+class Account:
+    def __init__(self, name, branch):
+        self.name = name
+        self.branch = branch
+    
+    def create_account(self):
+        print('Account creation successful')
+
+class SavingsAccount(Account):
+    def __init__(self, name, branch, acc_no):
+        super().__init__(name, branch)
+        self.acc_no = acc_no
+    
+    def create_account(self):
+        print('Savings account creation successful')
+
+
+# runtime polymorphism comes for free because of dynamic typing in Python (no need to specify the type on the left hand side of = operator unlike Java)
+obj = SavingsAccount('Mark', 'Dallas', 18938803261)
+obj.create_account()                            # Savings account creation successful
+
+obj = Account('Jonas', 'Boston')
+obj.create_account()                            # Account creation successful
+```
+
+### Abstraction
+
+- Using abstract classes and interfaces we can define a contract for our child classes.
+- An abstract class is one that has one or more abstract methods in it.
+- An abstract is one that has no implementation and will be marked with @abstractmethod decorator.
+- If any child class extends or inherits an abstract class then it will have to implement all the abstract methods present in the parent class. If it does not implement all the abstract methods (keeping the method signature same) then then this child class will also become an abstract class.
+- You cannot create an object of an abstract class. It exists to just provide a contract for the child classes.
+- You can have methods in an abtract class that can have implementation but typically at least one method in an abstract class is an abtract method.
+- In Python we implement abstract classes by using a class called ABC from abc module.
+- Interfaces are abstract classes where all the methods are abstract, in Python we don't have a specific keyword to define it.
+
+```python
+# program: demonstrate the use of abstract classes with a suitable example
+from abc import abstractmethod, ABC
+
+# if you your class don't inherit the ABC class then it won't mandate the abstract method to be implemented by its child classes
+class BMW(ABC):
+    def __init__(self, make, model, year):
+        self.make = make
+        self.model = model
+        self.year = year
+
+    def start(self):
+        print('Starting the car')
+
+    def stop(self):
+        print('Stopping the car')
+
+    @abstractmethod
+    def drive(self):
+        pass
+
+class ThreeSeries(BMW):
+    def __init__(self, make, model, year, cruise_control_enabled):
+        BMW.__init__(self, make, model, year)
+        self.cruise_control_enabled = cruise_control_enabled
+
+    def drive(self):
+        print('Three series is being driven')
+    
+class FiveSeries(BMW):
+    def __init__(self, make, model, year, parking_assist_enabled):
+        BMW.__init__(self, make, model, year)
+        self.parking_assist_enabled = parking_assist_enabled
+
+    def drive(self):
+        print('Five series is being driven')
+
+# bmw = BMW('BMW', '328i', '2018')              # TypeError: Can't instantiate abstract class BMW with abstract method drive
+tseries = ThreeSeries('BMW', '328i', '2018', True)
+tseries.drive()                                 # Three series is being driven
+```
+
+```python
+# program: demonstrate the use of interfaces with a suitable example
+from abc import abstractmethod, ABC
+
+class BMW(ABC):
+    def __init__(self, make, model, year):
+        self.make = make
+        self.model = model
+        self.year = year
+
+    @abstractmethod
+    def start(self):
+        pass
+
+    @abstractmethod
+    def stop(self):
+        # even if we provide the implementation for stop() method here but as we marked it @abstractmethod so the child class has to implement it
+        print('Stopping the car')
+
+    @abstractmethod
+    def drive(self):
+        pass
+
+class ThreeSeries(BMW):
+    def __init__(self, make, model, year, cruise_control_enabled):
+        BMW.__init__(self, make, model, year)
+        self.cruise_control_enabled = cruise_control_enabled
+
+    def start(self):
+        print('Starting the car automatically')
+
+    def stop(self):
+        super().stop()
+        print('Stopping it using handbreaks')
+
+    def drive(self):
+        print('Three series is being driven')
+    
+class FiveSeries(BMW):
+    def __init__(self, make, model, year, parking_assist_enabled):
+        BMW.__init__(self, make, model, year)
+        self.parking_assist_enabled = parking_assist_enabled
+
+    def start(self):
+        print('Starting the car using a remote')
+    
+    def stop(self):
+        super().stop()
+        print('Stopping it using a remote')
+
+    def drive(self):
+        print('Five series is being driven')
+
+print('------------ THREE SERIES ------------') # ------------ THREE SERIES ------------
+tseries = ThreeSeries('BMW', '328i', '2018', True)
+tseries.start()                                 # Starting the car automatically
+tseries.stop()                                  # Stopping the car
+                                                # Stopping it using handbreaks
+tseries.drive()                                 # Three series is being driven
+
+print('------------ FIVE SERIES ------------')  # ------------ FIVE SERIES ------------
+fseries = FiveSeries('BMW', '527i', '2020', True)
+fseries.start()                                 # Starting the car using a remote
+fseries.stop()                                  # Stopping the car
+                                                # Stopping it using a remote
+fseries.drive()                                 # Five series is being driven
+```
+
+## Exception Handling, Assertions and Logging
