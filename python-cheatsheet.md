@@ -2521,7 +2521,7 @@ tseries.start()                                 # Starting the car
 - Method overloading is not supported by Python, we have other work arounds to build the same kind of functionality in Python.
 - Duck typing is not really a feature that a programming language offers but it comes for free if a programming language is dynamic in nature.
 - Dependency injection is nothing but simply injecting an object into another object as required. Example: A flight needs an engine to fly, we can inject different types of engines like Airbus manufactured engine or Boing manufactured engine into the flight object dynamically. To achieve this in Java - a. create interface called Engine, b. AirbusEngine and BoringEngine class should implement Engine interface, c. use the interface inside the object as a field (Generalization). In Python we can simply achieve this using duck typing.
-- + operator in Python is polymorphic in nature. Because,
+- \+ operator in Python is polymorphic in nature. Because,
   - If you use it on two numbers, it will add them.
   - If you use it on two string, it will append them.
   - If you use it on two lists, it make a single list out of the given two lists.
@@ -2620,6 +2620,23 @@ obj.create_account()                            # Savings account creation succe
 
 obj = Account('Jonas', 'Boston')
 obj.create_account()                            # Account creation successful
+```
+
+```python
+# program: demonstrate how to build up the logic for method overloading in Python
+def area(width=None, height=None):
+    if width == None and height == None:
+        print('Nothing to calculate')
+    elif height == None:
+        # calculate the area of a square
+        print('Area of the square:', width * width)
+    else:
+        # calculate the area of a rectangle
+        print('Area of the rectangle:', width * height)
+
+area()                                          # Nothing to calculate
+area(5)                                         # Area of the square: 25
+area(10, 7)                                     # Area of the rectangle: 70
 ```
 
 ### Abstraction
@@ -2997,6 +3014,7 @@ f.close()
 - Regular expressions are also known as regex.
 - Regular expression is a pattern that we create to search for a string with a given string or to validate the given string to see if it follows the given pattern (validate email, validate strength of a password)
 - To use regular expressions we import a module 're' which has important methods like match(), search(), findall(), split(), sub() etc.
+- Python’s re.compile() method is used to compile a regular expression pattern provided as a string into a regex pattern object (re.Pattern). Later we can use this pattern object to search for a match inside different target strings using regex methods such as a re.match() or re.search().
 - The regular expression syntax define some special characters called sequence characters that we can use to match a single character in a given string.
   - \d: Matches any digit i.e. 0 to 9.
   - \D: Matches any character that is non-digit.
@@ -3010,17 +3028,21 @@ f.close()
   - \t: Matches tab
   - \n: Matches newline
   - \r: Matches return
+- Quantifiers can be used to match multiple characters.
+  - +: One or more repititions of the preceeding regular expression.
+  - *: Zero or more repititions of the preceeding regular expression.
+  - ?: Zero or one repitition of the preceeding regular expression.
+  - {m}: Exactly m occurrences of the preceeding regular expression.
+  - {m, n}: m = Minimum no of occurrences, n = maximum no of occurrences of the preceeding regular expression. By default m = 0 and n = infinity.
+- Special characters:
+  - \: escape character, if you want to add a backward slash (\\) or any other special characters within the regular expression then you have to escape it using a backward slash.
+  - .: Matches any single character except the newline character.
   - ^: Matches a pattern at the start of the string.
   - $: Matches a pattern at the end of the string.
-- Quantifiers can be used to match multiple characters.
-  - .: Matches any single character except the newline character.
-  - +: one or more repititions of the preceeding regular expression.
-  - *: zero or more repititions of the preceeding regular expression.
-  - ?: zero or one repitition of the preceeding regular expression.
-  - {m}: Exactly m occurrences of the preceeding regular expression.
-  - {m, n}: m = minimum no of occurrences, n = maximum no of occurrences of the preceeding regular expression. By default m = 0 and n = infinity.
-  - []: Matches the set of characters you specify within it.
+  - []: Matches the set of characters you specify within it (e.g. [a-z]).
+  - \[^]: Does not match the set of characters you specify within it.
   - (): Creates a group when performing matches.
+  - (R|S): Matchs multiple regular expressions (R=first_regex, S=second_regex)
   - <>: Creates a named group when performing matches.
 - For more info visit: <https://www.datacamp.com/community/tutorials/python-regular-expression-tutorial>
 
@@ -3077,4 +3099,306 @@ import re
 s = 'Sitting on the chair he is thinking of the life he has lead in the past'
 result = re.sub(r'on', 'in', s)                 # Sitting in the chair he is thinking of the life he has lead in the past
 print(result)
+```
+
+```python
+# program: demonstrate the use of quantifiers with a suitable example
+import re
+
+s = 'Take up one idea, one idea at a time'
+
+result = re.findall(r'o\w+', s)
+print(result)                                   # ['one', 'one']
+
+result = re.findall(r'o\w+', s)
+print(result)                                   # ['one', 'one']
+
+result = re.findall(r'o\w*', s)
+print(result)                                   # ['one', 'one']
+
+result = re.findall(r'o\w?', s)
+print(result)                                   # ['on', 'on']
+
+result = re.findall(r'o\w{1}', s)
+print(result)                                   # ['on', 'on']
+
+result = re.findall(r'o\w{3}', s)
+print(result)                                   # []
+
+result = re.findall(r'o\w{1,2}', s)
+print(result)                                   # ['one', 'one']
+```
+
+```python
+# program: match all the dates in a given string having 'dd-mm-yyyy' pattern
+import re
+
+s = 'He was born on 23-11-1995 and his current age is near about 26 years'
+
+result = re.findall(r'\d{1,2}-\d{1,2}-\d{4}', s)
+print(result)                                   # ['23-11-1995']
+```
+
+```python
+# program: demonstrate the use of special characters in a regular expression with a suitable example
+import re
+
+s = 'Take up one idea, one idea at a time'
+
+result = re.findall(r'^T\w*', s)
+print(result)                                   # ['Take']
+
+result = re.findall(r'[te]', s)                 # ['e', 'e', 'e', 'e', 'e', 't', 't', 'e']
+print(result)
+```
+
+```python
+# program: demonstrate the use of re.compile() method
+import re
+
+s = 'Take up one idea, one idea at a time'
+
+pattern = re.compile(r't\w{1,3}')
+result = pattern.search(s)
+
+if result == None:
+    print('No matches found')
+else:
+    print('Matches: ', pattern.findall(s))      # Matches:  ['time']
+```
+
+## Date and Time
+
+- epoch = Start of time in seconds and on UNIX machines this start of time is from Jan 1st, 1970.
+- Using epoch we can calculate the given date and time using ctime() function from time module or datetime classes and objects from datetime module.
+
+```python
+# program: display the current time and date using time module
+import time
+
+# time() will give us the seconds starting from the epoch
+epochseconds = time.time()
+print(epochseconds)                             # 1635881118.6250482
+
+# convert it to human readable time format
+t = time.ctime(epochseconds)
+print(t)                                        # Wed Nov  3 00:55:18 2021
+```
+
+```python
+# program: display the current time and date using datetime module
+import datetime
+
+dt = datetime.datetime.today()                  # 2021-11-03 00:57:46.959731
+print(dt)
+
+print('day =', dt.day)                          # day = 3
+print('month =', dt.month)                      # month = 11
+print('year =', dt.year)                        # year = 2021
+print('hour =', dt.hour)                        # hour = 0
+print('minute =', dt.minute)                    # minute = 59
+print('second =', dt.second)                    # second = 22
+```
+
+```python
+# program: combine and create a date-time object taking inputs from user
+from datetime import *
+
+dobj = date(2018, 7, 21)
+tobj = time(12, 45)
+dt = datetime.combine(dobj, tobj)               # 2018-07-21 12:45:00
+print(dt)
+```
+
+```python
+# program: sort given dates in python
+from datetime import *
+
+ldates = []
+
+d1 = date(2015, 5, 12)
+d2 = date(2021, 5, 12)
+d3 = date(2014, 5, 12)
+
+ldates.append(d1)
+ldates.append(d2)
+ldates.append(d3)
+
+ldates.sort()
+
+for d in ldates:
+    print(d, end=' | ')                         # 2014-05-12 | 2015-05-12 | 2021-05-12 | 
+```
+
+```python
+# program: delaying the execution of a program temporarily using sleep() function
+import time
+
+for i in range(1, 5):
+    time.sleep(1)
+    print(i, end=' ')                           # 1 2 3 4
+```
+
+```python
+# program: find out the execution time of python program
+import time
+
+start_time = time.perf_counter()
+
+for i in range(1, 5):
+    time.sleep(1)
+    print(i, end=' ')                           # 1 2 3 4
+
+end_time = time.perf_counter()
+print('\nExecution time:', end_time - start_time) # 4.324250329
+```
+
+```python
+# program: demonstrate useful date and time functions in a single program
+from datetime import datetime, timedelta
+
+# get current date and time
+print(datetime.now())                           # 2021-11-03 03:07:11.643717
+print(datetime.today())                         # 2021-11-03 03:07:11.702886
+
+# get current date
+print(datetime.now().date())                    # 2021-11-03
+
+# get current time
+print(datetime.now().time())                    # 03:07:11.769145
+
+# timestamp to datetime object
+parsed_dt = datetime.fromtimestamp(1635888518)
+print(parsed_dt)                                # 2021-11-03 02:58:38
+
+# adding hours to current datetime object
+future_dt = datetime.now() + timedelta(hours=2)
+print(future_dt)                                # 2021-11-03 05:07:11.853310
+
+# converting datetime object to str object
+str_time = datetime.now().strftime('%d-%b-%Y %I:%M:%S %p')
+print(str_time)                                 # 03-Nov-2021 03:07:11 AM
+
+# converting datetime object to timestamp
+ts = datetime.timestamp(datetime.now())
+print(ts)                                       # 1635889031.919165
+```
+
+```python
+# program: project management application
+from datetime import *
+
+class Project:
+    def __init__(self, name, start_date, end_date):
+        self.name = name
+        self.start_date = start_date
+        self.end_date = end_date
+        self.tasks = []
+
+    def add_task(self, task):
+        self.tasks.append(task)
+
+class Task:
+    def __init__(self, name, duration):
+        self.name = name
+        self.duration = duration
+        self.resources = []
+
+    def add_resource(self, resource):
+        self.resources.append(resource)
+
+
+class Resource:
+    def __init__(self, name, skill):
+        self.name = name
+        self.skill = skill
+
+project = Project('AI', date(2021, 1, 1), date(2021, 12, 31))
+task = Task('Create a bot', 90)
+resource = Resource('Derek', 'Python')
+task.add_resource(resource)
+project.add_task(task)
+
+
+for each_task in project.tasks:
+    print(each_task.name)                       # Create a bot
+
+    for each_resource in each_task.resources:
+        print(each_resource.name)               # Derek
+        print(each_resource.skill)              # Python
+```
+
+## Threads
+
+- Python Virtual Machine runs our code in a single thread called Main, so they are called single threaded application.
+- There are three ways to create a thread in Python:
+  - Using a function
+
+    ```python
+    t = Thread(target=function_name, function_args)
+    t.start()
+    ```
+
+  - Extending the Thread class, override the run() method and call t.start() [t = instance of our class that extends Thread class]
+  - Hybrid approach - create a class, add function, create an object of Thread class and pass the function name in the constructor
+
+    ```python
+    class MyThread:
+        def display():
+            pass
+    
+    myobj = MyThread()
+
+    # t = Thread(target=myobj.function_name, function_args)
+    t = Thread(target=myobj.display)
+    t.start()
+    ```
+
+```python
+# program: accessing the information about main thread / current thread
+import threading
+
+print('Current thread:', threading.current_thread().getName())      # Current thread: MainThread
+
+# verifying which thread is currently controlling the flow of our program (useful when multiple threads are running together)
+if threading.current_thread() == threading.main_thread():
+    print('Main thread is in exection...')      # Main thread is in exection...
+else:
+    print('Someother thread is in execution...')
+```
+
+```python
+# program: create a thread using a function and print its name
+from threading import *
+
+def display_numbers():
+    i = 0
+    print('Current Thread:', current_thread().getName())
+    while (i <= 10):
+        print(i, end=' ')
+        i += 1
+
+print('Initial Thread:', current_thread().getName())        # Initial Thread: MainThread
+t = Thread(target=display_numbers)
+t.start()                                                   # Current Thread: Thread-1
+                                                            # 0 1 2 3 4 5 6 7 8 9 10
+```
+
+```python
+# program: demonstrate the usecase of running main thread and another thread together
+from threading import *
+
+def display_numbers():
+    i = 0
+    while (i <= 10):
+        print(i, end=' ')
+        i += 1
+
+t = Thread(target=display_numbers)
+t.start()
+# main thread and another thread running together the following function
+display_numbers()                               # 00  11  22  33  44  55  66  77  88  99  1010
+print()
+# main thread executing the following function
+display_numbers()                               # 0 1 2 3 4 5 6 7 8 9 10
 ```
