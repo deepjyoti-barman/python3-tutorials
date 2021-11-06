@@ -3354,6 +3354,33 @@ for each_task in project.tasks:
     t.start()
     ```
 
+- When multiple threads are accessing the same resources it is very important that they don't corrupt each other's resources or objects. For example, two different user should never end up buying the same tickets or same seats of a flight/movie. This is where thread synchronization comes in.
+- We can lock an object for a particular thread using two different ways:
+  - Using locks
+  - Using semaphores
+- When a thread locks an object, it enters into a room of its own. It will lock that object and it will own that object and only when that thread releases that object, the other threads an use that object or resource. This process of thread acquiring a lock and entering a room is also known as thread mutex.
+- Lock: to acquire a lock on an object
+
+    ```python
+    l = Lock()              # create a Lock object
+    l.acquire()             # invoke the acquire() method
+    l.release()             # until it invokes the release() method no other thread can process or use the current object
+    ```
+
+- Semaphore: Semaphore is simply acquiring a lock but internally it uses a counter. Initially the counter will be set to number 1 and everytime a lock is acquired this number will be decremented by 1 which will then becomes 0 and then once that lock is released, the counter is incremented by 1 again. So, the internal implementation is different. To acquire a lock on an object using semaphore:
+
+    ```python
+    l = Semaphore()         # create a Semaphore object
+    l.acquire()
+    l.release()
+    ```
+
+- Inter thread communication: When we work on real time applications which use multiple threads often these threads need to communicate with each other to get the job done, and a very common pattern we see in multi-threaded application is - Producer and Consumer pattern, where we have two threads, the producer thread and the consumer thread.
+- The producer thread is responsible for creating some work e.g. preparing the order list from the customer and the consumer thread is responsible for consuming/processing the orders and shipping them. Here the consumer thread needs to know when the work i.e. list of orders are available for processing and shipping.
+- One way to do this commnication is to have a boolean flag called orders placed on the particular thread, the consumer thread will be continuously checking if this flag is true. Initially this flag will be false, only when the producer thread has a list of orders, this flag will be flipped to true and the consumer thread will be continouly checking to see if this flag is true. If it is true then it will take the list of orders from the producer thread, process them and ship them.
+- We can also do this type of communication using functions like wait(), notify() and notifyAll() present in the condition class of threading module. We need to have the Condition class object in producer, use the Condition object in consumer (via producer obj) to the wait() method, which will make the consumer thread wait until the producer thread is done with its job. The producer then should invoke the notify() method whenever the work is ready with its list of orders. Whenever the producer invokes the notify() method, the consumer will be notified and it can process its logic. If multiple threads are waiting for the producer to get its job done, then the producer will invoke notifyAll() and all the threads waiting on the producer will be notified and they can do their job. But, all these should happen in a lock context i.e. these threads should acquire the lock on this Condition object when they are working with them and only then they should use the wait(), notify() and notifyAll() method.
+- Queue class provides us the methods to implement inter-thread communication in a much easier way. The Queue object has two methods put() and get(). put() puts item onto the queue and get() gets the item from the queue by removing it from the queue. But, the beauty is the put() method will lock the Queue object when it performs the put() operation, so that get() will not happen, no other thread will be able to access the queue. Similarly the get method will lock the queue as well. So, the synchronization is taken care of by the logic which is already there in the put() and get() methods of the queue internally.
+
 ```python
 # program: accessing the information about main thread / current thread
 import threading
@@ -3401,4 +3428,432 @@ display_numbers()                               # 00  11  22  33  44  55  66  77
 print()
 # main thread executing the following function
 display_numbers()                               # 0 1 2 3 4 5 6 7 8 9 10
+```
+
+```python
+# program: create a thread extending the Thread class
+from threading import Thread
+
+class MyThread(Thread):
+    # overriding the run method from the parent class
+    def run(self):
+        i = 0
+        while (i <= 10):
+            print(i, end=' ')
+            i += 1
+
+t = MyThread()
+# Note: don't call the run() method directly (doing this will make Main thread do all the tasks) instead call the start() method to initiate a separate thread
+t.start()                                       # 0 1 2 3 4 5 6 7 8 9 10 
+```
+
+```python
+# program: create a thread using the hybrid approach (i.e. create a class and add a function in it but don't inherit the Thread class)
+from threading import *
+
+class MyThread:
+    def display_numbers(self):
+        i = 0
+        while (i <= 10):
+            print(i, end=' ')
+            i += 1    
+
+mthread = MyThread()
+t = Thread(target=mthread.display_numbers)
+t.start()                                       # 1 2 3 4 5 6 7 8 9 10 
+```
+
+```python
+# program: demonstrate multi-threading in action
+from threading import *
+
+class MyThread:
+    def display_numbers(self):
+        i = 0
+        print(current_thread().getName())
+        while (i <= 10):
+            print(i, end=' ')
+            i += 1    
+
+mthread = MyThread()
+t1 = Thread(target=mthread.display_numbers)
+t1.start()
+
+t2 = Thread(target=mthread.display_numbers)
+t2.start()
+
+t3 = Thread(target=mthread.display_numbers)
+t3.start()                                      # Thread-2Thread-1Thread-3
+                                                # 000   111   222   333   444   555   666   777   888   999   101010   
+```
+
+```python
+# program: demonstrate delaying the thread execution using sleep()
+from threading import *
+from time import sleep
+
+class MyThread:
+    def display_numbers(self):
+        i = 0
+        print(current_thread().getName())
+        sleep(1)
+        while (i <= 10):
+            print(i, end=' ')
+            i += 1    
+
+mthread = MyThread()
+t1 = Thread(target=mthread.display_numbers)
+t1.start()
+
+t2 = Thread(target=mthread.display_numbers)
+t2.start()
+
+t3 = Thread(target=mthread.display_numbers)
+t3.start()                                      # Thread-1Thread-3Thread-2
+                                                # 000   111   222   333   444   555   666   777   888   999   101010
+```
+
+```python
+# program: practical example of multi threading
+from threading import *
+
+class BookMyTicket:
+    def __init__(self, available_seats):
+        self.available_seats = available_seats
+
+    def buy(self, seats_requested):
+        print(current_thread().getName())
+        print('Total seats available:', self.available_seats)
+        if (self.available_seats >= seats_requested):
+            print('Confirming a seat')
+            print('Processing the payment')
+            print('Printing the ticket')
+            self.available_seats -= seats_requested
+        else:
+            print('Sorry, no seats available')
+
+obj = BookMyTicket(10)
+
+# args takes an iterator as argument
+t1 = Thread(target=obj.buy, args=(3, ))
+t2 = Thread(target=obj.buy, args=(4, ))
+t3 = Thread(target=obj.buy, args=(5, ))
+
+t1.start()
+t2.start()
+t3.start()                  # Thread-1Thread-2Thread-3
+                            # Total seats available:Total seats available:Total seats available:   101010
+                            # Confirming a seatConfirming a seatConfirming a seat
+                            # Processing the paymentProcessing the paymentProcessing the payment
+                            # Printing the ticketPrinting the ticketPrinting the ticket
+```
+
+```python
+# program: demonstrate synchronization using a Lock
+from threading import *
+
+class BookMyTicket:
+    def __init__(self, available_seats):
+        self.available_seats = available_seats
+        self.l = Lock()
+
+    def buy(self, seats_requested):
+        self.l.acquire()
+        print(current_thread().getName())
+        print('Total seats available:', self.available_seats)
+        if (self.available_seats >= seats_requested):
+            print('Confirming a seat')
+            print('Processing the payment')
+            print('Printing the ticket')
+            # here in this buy() method its quite possible that before first thread makes the deduction in the next line, another thread can start executing and find the no of seats to be available, so we might end up booking/reserving duplicate tickets for the flight/movie.
+            # to solve this issue we need to implement synchronization here.
+            self.available_seats -= seats_requested
+        else:
+            print('Sorry, no seats available')
+        self.l.release()
+
+obj = BookMyTicket(10)
+
+# args takes an iterator as argument
+t1 = Thread(target=obj.buy, args=(3, ))
+t2 = Thread(target=obj.buy, args=(4, ))
+t3 = Thread(target=obj.buy, args=(5, ))         # no tickets should be booked this case
+
+t1.start()
+t2.start()
+t3.start()                  # Thread-1
+                            # Total seats available: 10
+                            # Confirming a seat
+                            # Processing the payment
+                            # Printing the ticket
+                            # Thread-2
+                            # Total seats available: 7
+                            # Confirming a seat
+                            # Processing the payment
+                            # Printing the ticket
+                            # Thread-3
+                            # Total seats available: 3
+                            # Sorry, no seats available
+```
+
+```python
+# program: demonstrate synchronization using a Semaphore
+from threading import *
+
+class BookMyTicket:
+    def __init__(self, available_seats):
+        self.available_seats = available_seats
+        self.l = Semaphore()
+
+    def buy(self, seats_requested):
+        print(current_thread().getName())
+        print('Total seats available:', self.available_seats)
+        self.l.acquire()
+        if (self.available_seats >= seats_requested):
+            print('Confirming a seat')
+            print('Processing the payment')
+            print('Printing the ticket')
+            # here in this buy() method its quite possible that before first thread makes the deduction in the next line, another thread can start executing and find the no of seats to be available, so we might end up booking/reserving duplicate tickets for the flight/movie.
+            # to solve this issue we need to implement synchronization here.
+            self.available_seats -= seats_requested
+        else:
+            print('Sorry, no seats available')
+        self.l.release()
+
+obj = BookMyTicket(10)
+
+# args takes an iterator as argument
+t1 = Thread(target=obj.buy, args=(3, ))
+t2 = Thread(target=obj.buy, args=(4, ))
+t3 = Thread(target=obj.buy, args=(5, ))         # no tickets should be booked this case
+
+t1.start()
+t2.start()
+t3.start()                  # Thread-1
+                            # Total seats available: 10
+                            # Confirming a seat
+                            # Processing the payment
+                            # Printing the ticket
+                            # Thread-2
+                            # Total seats available: 7
+                            # Confirming a seat
+                            # Processing the payment
+                            # Printing the ticket
+                            # Thread-3
+                            # Total seats available: 3
+                            # Sorry, no seats available
+```
+
+```python
+# program: demonstrate inter-thread communication using a boolean flag
+from threading import *
+import time
+
+class Producer:
+    def __init__(self):
+        self.products = []
+        self.orders_placed = False
+
+    def produce(self):
+        for i in range(1, 5):
+            self.products.append('Product ' + str(i))
+            time.sleep(1)
+            print('Product added')
+        self.orders_placed = True
+
+class Consumer:
+    def __init__(self, producer):
+        self.producer = producer
+
+    def consume(self):
+        while self.producer.orders_placed == False:
+            print('Waiting for the orders to be placed...')
+            time.sleep(0.5)
+        
+        print('Orders shipped', self.producer.products)
+
+p = Producer()
+c = Consumer(p)
+
+t1 = Thread(target=p.produce)
+t2 = Thread(target=c.consume)
+
+t1.start()
+t2.start()                                      # Waiting for the orders to be placed...
+                                                # Waiting for the orders to be placed...
+                                                # Product added
+                                                # Waiting for the orders to be placed...
+                                                # Waiting for the orders to be placed...
+                                                # Product added
+                                                # Waiting for the orders to be placed...
+                                                # Waiting for the orders to be placed...
+                                                # Product added
+                                                # Waiting for the orders to be placed...
+                                                # Waiting for the orders to be placed...
+                                                # Product added
+                                                # Orders shipped ['Product 1', 'Product 2', 'Product 3', 'Product 4']
+```
+
+```python
+# program: demonstrate inter-thread communication using wait() and notify() method
+from threading import *
+import time
+
+class Producer:
+    def __init__(self):
+        self.products = []
+        self.c = Condition()
+
+    def produce(self):
+        self.c.acquire()                        # acquiring a lock on the object
+
+        for i in range(1, 5):
+            self.products.append('Product ' + str(i))
+            time.sleep(1)
+            print('Product added')
+
+        self.c.notify()
+        self.c.release()                        # releasing a lock on the object
+
+class Consumer:
+    def __init__(self, producer):
+        self.producer = producer
+
+    def consume(self):
+        self.producer.c.acquire()
+
+        # we can optionally pass the timeout in seconds to wait() method to wait for a certain amount of time in seconds before we execute our logic
+        # timeout=0 means the logic will be executed as soon as notify() method is invoked by the other thread 
+        self.producer.c.wait(timeout=0)
+        self.producer.c.release()
+        print('Orders shipped', self.producer.products)
+
+p = Producer()
+c = Consumer(p)
+
+t1 = Thread(target=p.produce)
+t2 = Thread(target=c.consume)
+
+t1.start()
+t2.start()                                      # Product added
+                                                # Product added
+                                                # Product added
+                                                # Orders shipped ['Product 1', 'Product 2', 'Product 3', 'Product 4']
+```
+
+```python
+# program: demonstrate inter-thread communication using Queue
+import queue
+import random
+import time
+from threading import *
+
+def producer(queue):
+    i = 0
+    while i < 3:
+        print('Producer: Producing\n')
+        queue.put(random.randint(1, 50))
+        print('Producer: Produced\n')
+        i += 1
+        time.sleep(2)
+
+def consumer(queue):
+    i = 0
+    while i < 3:
+        print('Consumer: Ready to consume\n')
+        print('Consumer: Data - ' + str(queue.get()))
+        i += 1
+        time.sleep(2)
+
+q = queue.Queue()
+
+t1 = Thread(target=producer, args=(q, ))
+t2 = Thread(target=consumer, args=(q, ))
+
+t1.start()
+t2.start()                                      # Producer: Producing
+                                                # Consumer: Ready to consume
+
+                                                # Producer: Produced
+                                                # Consumer: Data - 10
+
+                                                # Producer: Producing
+                                                # Consumer: Ready to consume
+
+                                                # Producer: Produced
+                                                # Consumer: Data - 30
+
+                                                # Producer: Producing
+                                                # Consumer: Ready to consume
+
+                                                # Producer: Produced
+                                                # Consumer: Data - 40
+```
+
+```python
+# program: demonstrate the use of FIFO queue in Python
+import queue
+
+q = queue.Queue()
+
+q.put(400)
+q.put(100)
+q.put(500)
+q.put(50)
+
+print('Order of pop out values:', end=' ')
+while not q.empty():
+    print(q.get(), end=' ')                     # Order of pop out values: 400 100 500 50 
+```
+
+```python
+# program: demonstrate the use of LIFO queue in Python
+import queue
+
+q = queue.LifoQueue()
+
+q.put(400)
+q.put(100)
+q.put(500)
+q.put(50)
+
+print('Order of pop out values:', end=' ')
+while not q.empty():
+    print(q.get(), end=' ')                     # Order of pop out values: 50 500 100 400 
+```
+
+```python
+# program: demonstrate the use of Priority queue with numeric values
+# note: in a priority queue when we pass no priority value and only a numeric value - it will use the numeric value as its priority, lowest value will pop out first.
+import queue
+
+q = queue.PriorityQueue()
+
+q.put(400)
+q.put(100)
+q.put(500)
+q.put(50)
+
+print('Order of pop out values:', end=' ')
+while not q.empty():
+    print(q.get(), end=' ')                     # Order of pop out values: 50 100 400 500 
+```
+
+```python
+# program: demonstrate the use of Priority queue with string values along with their priority
+# note: in this case string value with lowest priority will come out first
+import queue
+
+q = queue.PriorityQueue()
+
+q.put((400, 'John'))
+q.put((100, 'Bob'))
+q.put((500, 'Henry'))
+q.put((50, 'Mark'))
+
+print('Order of pop out values:', end=' ')
+while not q.empty():
+    # To popup only the names
+    # print(q.get()[1], end=' ')
+    print(q.get(), end=' ')                     # Order of pop out values: (50, 'Mark') (100, 'Bob') (400, 'John') (500, 'Henry')  
 ```
