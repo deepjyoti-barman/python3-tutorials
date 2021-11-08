@@ -3857,3 +3857,158 @@ while not q.empty():
     # print(q.get()[1], end=' ')
     print(q.get(), end=' ')                     # Order of pop out values: (50, 'Mark') (100, 'Bob') (400, 'John') (500, 'Henry')  
 ```
+
+## Networking and Socket Programming
+
+```python
+# program: download a HTML document from the web
+import urllib.request
+
+try:
+    # open the url
+    url = urllib.request.urlopen('https://www.python.org')
+
+    # read the contents of the url
+    content = url.read()
+except urllib.error.HTTPError:
+    print('Web page is not found')
+    exit()
+finally:
+    url.close()
+
+f = open('python-home.html', 'wb')
+f.write(content)
+print('HTML content is written successfully on the file')
+f.close()
+```
+
+```python
+# program: download images from the web
+import urllib.request
+
+try:
+    img_url = 'https://www.python.org/static/img/python-logo@2x.png'
+    urllib.request.urlretrieve(img_url, 'python-logo.png')
+    print('File has been saved successfully')
+except urllib.error.HTTPError:
+    print('File download is forbidden')
+    exit()
+```
+
+```python
+# program: create a server that listens and responds back to a client's request
+import socket
+
+host = 'localhost'
+port = 4000
+
+# creates and returns a socket (by default it used to create a socket which can do TCP/IP connections)
+# AF_INET = Internet Protocol v4 (set by default)
+# SOCK_STREAM = TCP/IP connection (set by default)
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+# binding socket to host and port (accepts arguments as a set)
+s.bind((host, port))
+
+# 1 = the number of connection the server is going to accept
+s.listen(1)
+print('Server is listening on port:', port)
+
+# accpets a client's connection, returns a connection and the client's address
+conn, addr = s.accept()
+
+print('Connection from ' + str(addr) + ' established successfully')
+
+# before sending the text we need to encode it to binary which can be done in two ways as the following
+conn.send(b'Welcome to the server!\n')
+conn.send('Bye see you next time'.encode())
+conn.close()
+s.close()
+```
+
+```python
+# program: create a client that connects and then communicates with a server
+import socket
+
+host = 'localhost'
+port = 4000
+
+# no need to pass any params here as by default it uses IP v4 and TCP/IP connection
+s = socket.socket()
+
+# connect to the host
+s.connect((host, port))
+
+# 1024 = buffer size, no of bytes we can receive at a time
+# socket.recv(1024) will read at most 1024 bytes
+msg = s.recv(1024)
+
+# continue receiving the msg till the EOF
+while msg:
+    # decode() has to be used because we encoded the string to binary in the server
+    print('Server:', msg.decode())
+    msg = s.recv(1024)
+
+s.close()
+```
+
+```python
+# program: create a file server that listens for the filename and sends the file content back to the server if the file exists
+import socket
+
+host = 'localhost'
+port = 4000
+
+s = socket.socket()
+s.bind((host, port))
+s.listen(1)
+print('Server is listening on port:', port)
+
+conn, addr = s.accept()
+
+# receive the filename from the client
+filename = conn.recv(1024)
+
+try:
+    # opening the file and sending back the file content
+    f = open(filename, 'rb')
+    content = f.read()
+    conn.send(content)
+except FileNotFoundError:
+    conn.send(b'File does not exist')
+finally:
+    f.close()
+
+conn.close()
+s.close()
+```
+
+```python
+# program: create a file client that requests for file to the server
+import socket
+
+host = 'localhost'
+port = 4000
+
+s = socket.socket()
+s.connect((host, port))
+
+# take the filename as input from the user and send it to the client
+filename = input('Enter a filename: ')
+s.send(filename.encode())
+
+# receive the content of the file from the server and print it
+content = s.recv(1024)
+
+# continue receiving the content till the EOF
+while content:
+    print(content.decode())
+    content = s.recv(1024)
+
+s.close()
+```
+
+```python
+# program: send an email using a script written in Python
+
+```
