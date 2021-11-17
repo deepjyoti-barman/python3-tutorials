@@ -1318,6 +1318,11 @@ else:
 - A function is a group of statements which perform a certain task.
 - Function can be of two type - in-built functions [i.e. input(), print()] and user defined functions.
 - User defined functions are used to process data, perform mathematical calculations and so on.
+- Variable scopes:
+  - 4 scope level: local, global, enclosed and built-in
+  - LEGB rule: Local scope > Enclosed scope > Global scope > Built-in scope
+  - Blocks like if / for/ while etc statements in Python do not count and the variables used or initialized inside the block of that statement can also be used and accessed outside its scope.
+  - Variables are not checked at compile-time, which is why other languages throw an exception. In Python, so long as the variable exists at the time you require it, no exception is thrown.
 - Advantages of functions are:
   - Reusability: Once we define a function and the statements inside it those statements need not be repeated at any other place in our application, we can simply invoke or call the function and that particular logic will happen for us.
   - Modularity: When we are working on a huge application we need not put the entire code in one single script of function. We can define multiple functions which will make our application modular.
@@ -1391,6 +1396,19 @@ for i in result:
 ```
 
 ```python
+# program: demonstrate that the block scope does not exist in Python
+x = 2
+if x == 2:
+    y = 3
+
+if x == 1:
+    z = 1
+
+print(y)                                        # 3
+# print(z)                                      # NameError: name 'z' is not defined
+```
+
+```python
 # program: showcase the use and scope of global and local variables in Python
 # global variable
 x = 123
@@ -1436,6 +1454,38 @@ print(x)                                        # 123
 display()                                       # 678
                                                 # 123
 print(x)                                        # 999
+```
+
+```python
+# program: enclosed scope, enclosed variable or non-local variable
+def outer():
+    # x is a local variable to outer() function
+    # But, to inner() function x is neither a local variable nor a global variable
+    # Hence, x is known as non-local variable / enclosed variable to inner() function
+    x = 20
+    def inner():
+        global x
+        x = 88
+    print('before calling inner() =', x)        # before calling func2() = 20
+    inner()
+    print('after calling inner() =', x)         # after calling func2() = 20
+
+outer()
+print(x)                                        # 88
+```
+
+```python
+# program: altering the value of non-local / enclosed variable
+def outer():
+    x = 20
+    def inner():
+        nonlocal x
+        x = 40
+    print('before calling inner() =', x)        # before calling func2() = 20
+    inner()
+    print('after calling inner() =', x)         # after calling func2() = 40
+
+outer()
 ```
 
 ```python
@@ -3895,6 +3945,8 @@ except urllib.error.HTTPError:
     exit()
 ```
 
+![Socket Programming](Diagrams/socket-programming.png)
+
 ```python
 # program: create a server that listens and responds back to a client's request
 import socket
@@ -4008,7 +4060,229 @@ while content:
 s.close()
 ```
 
-```python
-# program: send an email using a script written in Python
+![Sending Emails](Diagrams/sending-emails.png)
 
+- Before sending an email, you need to do the following settings on the Gmail account that you will be using to send the email:
+  - Login to your Gmail account and then click on the url to enable access from less secure apps: <https://www.google.com/settings/security/lesssecureapps>
+  - Click on the user icon on Gmail account > Manage your Gmail Account > Security > Remove '2-Step Verification' / 'Use your phone to sign-in'. If you have 2-step verification enabled on your email then generate and use an app password from the following url to login: <https://myaccount.google.com/apppasswords>
+- with statement: The with statement in Python is used for resource management and exception handling. You’d most likely find it when working with file streams. For example, the statement ensures that the file stream process doesn’t block other processes if an exception is raised, but terminates properly.
+  - Examples:  
+
+    ```python
+    file = open('file-path', 'w') 
+    try: 
+        file.write('Lorem ipsum') 
+    finally: 
+        file.close()
+    ```
+
+    The above lines can be re-written as:
+
+    ```python
+    with open('file-path', 'w') as file: 
+    file.write('Lorem ipsum')
+    ```
+
+```python
+# program: send an email using a script written in Python (first approach)
+import os
+import smtplib
+
+# EMAIL_ADDRESS = os.environ.get('EMAIL_USER')  # taking the sensitive information from the system environment variables
+EMAIL_ADDRESS = 'qtest4433@gmail.com'
+EMAIL_PASSWORD = 'makemytrip@123'
+
+fromEmailAddr = EMAIL_ADDRESS
+toEmailAddr = EMAIL_ADDRESS
+subject = 'Grab dinner this weekend?'
+body = 'How about dinner at 6 pm this Saturday at my place?'
+msg = f'Subject: {subject}\n\n{body}'
+
+server = smtplib.SMTP('smtp.gmail.com', 587)
+server.ehlo()                                   # optional statement (gets implicity called),this command initiates the SMTP session conversation. The client greets the server and introduces itself.
+server.starttls()                               # enable a secured connection by encrypting the traffic
+server.ehlo()
+server.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
+server.sendmail(fromEmailAddr, toEmailAddr, msg)
+print('Mail has been sent')
+server.quit()
+```
+
+```python
+# program: send an email using a script written in Python (second approach)
+import smtplib
+from email.mime.text import MIMEText
+
+body = 'This is a test email. How are you?'
+msg = MIMEText(body)
+msg['From'] = 'qtest4433@gmail.com'
+msg['To'] = 'qtest4433@gmail.com'
+msg['Subject'] = 'Hello'
+
+server = smtplib.SMTP('smtp.gmail.com', 587)
+server.starttls()                               # enable a secured connection by encrypting traffic
+server.login('qtest4433@gmail.com', 'makemytrip@123')
+server.send_message(msg)
+print('Mail has been sent')
+server.quit()
+```
+
+```python
+# program: send an email using a script written in Python (third approach)
+import imghdr
+import smtplib
+from email.message import EmailMessage
+
+msg = EmailMessage()
+contacts = ['qtest5544@gmail.com', 'qtest4433@gmail.com']
+msg['From'] = 'qtest4433@gmail.com'
+msg['To'] = ', '.join(contacts)
+msg['Subject'] = 'Hello'
+msg.set_content('This is a plain text email')
+# priority will be given to html body type, if it's not supported then the plain text body type will get the preference
+msg.add_alternative('''\
+<!DOCTYPE html>
+<html>
+    <body>
+        <h1 style="color: SlateGray;">This is an HTML Email!</h1>
+    </body>
+</html>
+''', subtype='html')
+
+with open('github-repositories/python3-tutorials/Diagrams/sending-emails.png', 'rb') as f:
+    file_data = f.read()
+    file_loc = f.name
+    file_name = file_loc.split('/')[len(file_loc.split('/')) - 1]
+    file_type = imghdr.what(file_loc)
+
+# msg.add_attachment(file_data, maintype='application', subtype='octet-stream', filename=file_name)         # generic file attachment
+msg.add_attachment(file_data, maintype='image', subtype=file_type, filename=file_name)
+
+# port with ssl connection = 465
+with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
+    server.login('qtest4433@gmail.com', 'makemytrip@123')
+    server.send_message(msg)
+    print('Mail has been sent')
+    server.quit()
+```
+
+## Database Operations
+
+![Database Connectivity](Diagrams/database-connectivity.png)
+![Steps to Connect to a Database](Diagrams/steps-to-connect-to-db.png)
+
+- Command to install MySQL Connector for Python: `pip3 install mysql-connector-python`
+- Softwares / applications required (any combo from the following can be used):
+  - MySQL Community Server (only Server installation required) + MySQL WorkBench
+  - XAMPP (got MariaDB in-built with PHPMyAdmin) + DBeaver Community Edition
+- Commands to create a database and table
+
+    ```sql
+    CREATE DATABASE mydb;
+
+    SHOW databases;
+
+    USE mydb;
+
+    CREATE TABLE employee (
+        id INT,
+        name VARCHAR(30),
+        salary DOUBLE
+    );
+
+    SHOW tables;
+
+    INSERT INTO
+        employee (id, name, salary)
+    VALUES
+        (1, 'Smith', 4000),
+        (2, 'Wilson', 5000.50),
+        (3, 'Ryan', 3470.50),
+        (4, 'Martin', 6050.10);
+    
+    SELECT * FROM employee;
+    ```
+
+```python
+# program: connect to a mysql db from Python
+import mysql.connector;
+
+HOST = 'localhost'
+DB = 'mydb'
+USER = 'admin'
+PASS = 'p@ssw0rd#123'
+
+# connecting to mysql server
+conn = mysql.connector.connect(host=HOST, database=DB, user=USER, password=PASS)
+
+# verifying if the connection is established
+if conn.is_connected():
+    print('Connected to MariaDB successfully')
+
+conn.close()
+```
+
+```python
+# program: fetch and display one record at a time from a table in Python
+import mysql.connector;
+
+HOST = 'localhost'
+DB = 'mydb'
+USER = 'admin'
+PASS = 'p@ssw0rd#123'
+
+conn = mysql.connector.connect(host=HOST, database=DB, user=USER, password=PASS)
+
+if conn.is_connected():
+    print('Connected to MariaDB successfully', end='\n\n')
+
+# creating a cursor
+cursor = conn.cursor()
+
+# executing the query
+cursor.execute('SELECT * FROM employee')
+
+# fetching one row at a time
+print('Records are:')
+row = cursor.fetchone()
+while row is not None:
+    print(row)
+    row = cursor.fetchone()
+
+cursor.close()
+conn.close()
+```
+
+```python
+# program: fetch all the records of a table at a shot and display them in Python
+import mysql.connector;
+
+HOST = 'localhost'
+DB = 'mydb'
+USER = 'admin'
+PASS = 'p@ssw0rd#123'
+
+conn = mysql.connector.connect(host=HOST, database=DB, user=USER, password=PASS)
+
+if conn.is_connected():
+    print('Connected to MariaDB successfully', end='\n\n')      # Connected to MariaDB successfully
+
+# creating a cursor
+cursor = conn.cursor()
+
+# executing the query
+cursor.execute('SELECT * FROM employee')
+
+# fetching one row at a time
+rows = cursor.fetchall()
+print('Total number of rows in the table =', cursor.rowcount)
+print('Records are:')                           # Records are:
+for row in rows:
+    print(row)                                  # (1, 'Smith', 4000.0)
+                                                # (2, 'Wilson', 5000.5)
+                                                # (3, 'Ryan', 3470.5)
+                                                # (4, 'Martin', 6050.1)
+
+cursor.close()
+conn.close()
 ```
