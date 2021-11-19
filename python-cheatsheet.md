@@ -4172,26 +4172,64 @@ with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
 ![Steps to Connect to a Database](Diagrams/steps-to-connect-to-db.png)
 
 - Command to install MySQL Connector for Python: `pip3 install mysql-connector-python`
+- Command to list all globally installed packages for Python: `pip3 list`
 - Softwares / applications required (any combo from the following can be used):
   - MySQL Community Server (only Server installation required) + MySQL WorkBench
   - XAMPP (got MariaDB in-built with PHPMyAdmin) + DBeaver Community Edition
-- Commands to create a database and table
+- Create new user account in XAMPP
+  ![XAMPP Startup Menu](Diagrams/xampp-startup-menu.png)
+  ![XAMPP PHPMyAdmin Index](Diagrams/xampp-phpmyadmin-index.png)
+  ![XAMPP PHPMyAdmin User Accounts](Diagrams/xampp-phpmyadmin-user-accounts.png)
+  ![XAMPP PHPMyAdmin New User Account](Diagrams/xampp-phpmyadmin-new-user-account.png)
+  ![XAMPP PHPMyAdmin Create New User](Diagrams/xampp-phpmyadmin-create-new-user.png)
+- Commands to create a database and table in MySQL
 
     ```sql
+    -- Connect to a database with a particular user/role
+    -- If you use a --password or -p option and specify a password value, there must be no space between --password= or -p and the password following it [i.e. -p<pass> (or) --password=<pass>]
+    -- If you use --password or -p but do not specify a password value, the client program will prompt you to enter the password
+    -- Command-line (iTerm2/Terminal): mysql -u <username/role> -p <database-name>
+    -- Command-line (iTerm2/Terminal)[Remote DB]: mysql -h <hostname> -P <port> -u <username/role> -p <database-name>
+
+    -- Create a user/role
+    CREATE USER 'deepjyotib'@'localhost' IDENTIFIED BY 'p@ssw0rd#123';
+
+    -- Show all users/roles
+    -- Note: To execute this query, you must log in to the MySQL database server as an administrator
+    SELECT user 
+    FROM mysql.user;
+
+    -- Grant all privileges to ther user
+    -- First asterisk (*) can be replaced with a specific <database-name>
+    -- Second asterisk (*) can be replaced with a specific <table-name> within that database
+    GRANT ALL PRIVILEGES ON *.* TO 'deepjyotib'@'localhost';
+
+    -- Delete a user/role
+    DROP USER 'deepjyoti'@'localhost';
+
+    -- Create a database
     CREATE DATABASE mydb;
 
+    -- Show all databases
     SHOW databases;
 
+    -- Use a database
     USE mydb;
 
+    -- Delete a database
+    DROP DATABASE mydb;
+
+    -- Create a table
     CREATE TABLE employee (
         id INT,
         name VARCHAR(30),
         salary DOUBLE
     );
 
+    -- Show all tables present in the current database
     SHOW tables;
 
+    -- Insert 4 records into the table
     INSERT INTO
         employee (id, name, salary)
     VALUES
@@ -4200,11 +4238,18 @@ with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
         (3, 'Ryan', 3470.50),
         (4, 'Martin', 6050.10);
     
+    -- Show all records from the table
     SELECT * FROM employee;
+
+    -- Update record(s) of the table
+    UPDATE employee SET name = 'Stephen' WHERE id = 4;
+
+    -- Delete record(s) from the table
+    DELETE FROM employee WHERE id = 4;
     ```
 
 ```python
-# program: connect to a mysql db from Python
+# program: (MySQL) connect to a db using Python
 import mysql.connector;
 
 HOST = 'localhost'
@@ -4212,7 +4257,7 @@ DB = 'mydb'
 USER = 'admin'
 PASS = 'p@ssw0rd#123'
 
-# connecting to mysql server
+# connecting to mysql db
 conn = mysql.connector.connect(host=HOST, database=DB, user=USER, password=PASS)
 
 # verifying if the connection is established
@@ -4223,7 +4268,7 @@ conn.close()
 ```
 
 ```python
-# program: fetch and display one record at a time from a table in Python
+# program: (MySQL) fetch and display one record at a time from a table
 import mysql.connector;
 
 HOST = 'localhost'
@@ -4254,7 +4299,7 @@ conn.close()
 ```
 
 ```python
-# program: fetch all the records of a table at a shot and display them in Python
+# program: (MySQL) fetch all the records of a table at a shot and display them
 import mysql.connector;
 
 HOST = 'localhost'
@@ -4273,9 +4318,9 @@ cursor = conn.cursor()
 # executing the query
 cursor.execute('SELECT * FROM employee')
 
-# fetching one row at a time
+# fetching all rows at one shot
 rows = cursor.fetchall()
-print('Total number of rows in the table =', cursor.rowcount)
+print('Total number of records in the table =', cursor.rowcount)
 print('Records are:')                           # Records are:
 for row in rows:
     print(row)                                  # (1, 'Smith', 4000.0)
@@ -4286,3 +4331,229 @@ for row in rows:
 cursor.close()
 conn.close()
 ```
+
+```python
+# program: (MySQL) insert a record in table
+import mysql.connector;
+
+HOST = 'localhost'
+DB = 'mydb'
+USER = 'admin'
+PASS = 'p@ssw0rd#123'
+
+conn = mysql.connector.connect(host=HOST, database=DB, user=USER, password=PASS)
+
+if conn.is_connected():
+    print('Connected to MariaDB successfully', end='\n\n')      # Connected to MariaDB successfully
+
+# creating a cursor
+cursor = conn.cursor()
+
+# executing the query
+try:
+    cursor.execute('INSERT INTO employee VALUES (5, "George", 4500)')
+    conn.commit()
+    print('Record successfully inserted into table')
+except Exception e:
+    conn.rollback()
+    print(e)
+    print('Record insertion failed')
+finally:
+    cursor.close()
+    conn.close()
+```
+
+```python
+# program: (MySQL) delete a record from table
+import mysql.connector;
+
+HOST = 'localhost'
+DB = 'mydb'
+USER = 'admin'
+PASS = 'p@ssw0rd#123'
+
+def delete(id):
+    conn = mysql.connector.connect(host=HOST, database=DB, user=USER, password=PASS)
+
+    if conn.is_connected():
+        print('Connected to MariaDB successfully', end='\n\n')      # Connected to MariaDB successfully
+
+    # creating a cursor
+    cursor = conn.cursor()
+
+    # executing the query
+    query = f'DELETE FROM employee WHERE id = {id}'
+    try:
+        cursor.execute(query)
+        conn.commit()
+        print('Record successfully deleted from the table')
+    except Exception e:
+        conn.rollback()
+        print(e)
+        print('Record insertion failed')
+    finally:
+        cursor.close()
+        conn.close()
+
+empId = int(input('Enter the employee id: '))
+delete(empId)
+```
+
+- Install Posgres.app for Mac from: <https://postgresapp.com/downloads.html>
+- To access psql command-line tools, add `/Applications/Postgres.app/Contents/Versions/14/bin/` to your .zshenv (or) .zshrc file.
+- Open Postgres.app > Click on 'Postgres' on the apple menu > Preferences >
+  - Untick 'Automatically start Postgres on Login
+  - Open databases with: iTerm
+- Commands to create a database and table in PostgreSQL
+
+    ```sql
+    -- Connect to a database with a particular user/role
+    -- Command-line (iTerm2/Terminal): psql -U <username/role> -d <database-name>
+    -- Command-line (iTerm2/Terminal)[Remote DB]: psql -h <hostname/ip> -p <port> -U <username/role> -d <database-name>
+
+    -- Create a user/role
+    CREATE USER deepjyotib WITH ENCRYPTED PASSWORD 'p@ssw0rd#123' CREATEDB CREATEROLE SUPERUSER INHERIT LOGIN REPLICATION BYPASSRLS;
+
+    -- Show all users/roles
+    -- Command: \du or \du+ (more information)
+    SELECT *
+    FROM pg_catalog.pg_user;
+
+    -- Grant all privileges on a particular table and sequence to the user/role
+    GRANT ALL PRIVILEGES ON DATABASE mydb TO deepjyotib;
+    GRANT ALL PRIVILEGES ON TABLE employee TO deepjyotib;
+    GRANT ALL PRIVILEGES ON SEQUENCE employee_id_seq TO deepjyotib;
+
+    -- Grant all privileges on all tables and sequences to the user/role
+    -- public is the default schema for all tables created
+    GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO deepjyotib;
+    GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO deepjyotib;
+
+    -- Delete a user/role
+    DROP USER deepjyotib;
+
+    -- Create a database
+    -- Before creating the database switch to the user/role which you want to set as its owner
+    CREATE DATABASE mydb;
+
+    -- Shows all databases
+    -- Command: \l or \l+ (more information)
+    SELECT datname FROM pg_database;
+
+    -- Use/change database and user/role
+    -- Command: \c <database-name>
+    -- Command: \c <database-name> <username>
+
+    -- Delete a database
+    DROP DATABASE mydb;
+
+    -- Display information about current connection
+    -- Command: \conninfo
+    SELECT current_user;
+    SELECT current_database();
+
+    -- Show all tables
+    -- Command: \dt or \dt+ (more information)
+    SELECT *
+    FROM pg_catalog.pg_tables
+    WHERE schemaname != 'pg_catalog' AND 
+        schemaname != 'information_schema';
+
+    -- Create a table
+    CREATE TABLE employee (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(30),
+        salary REAL
+    );
+
+    -- Insert 4 records into the table
+    INSERT INTO
+        employee (name, salary)
+    VALUES
+        ('Smith', 4000),
+        ('Wilson', 5000.50),
+        ('Ryan', 3470.50),
+        ('Martin', 6050.10);
+        
+    -- Show all records from the table
+    -- Command: TABLE <table-name>;
+    SELECT * FROM employee;
+
+    -- Update record(s) of the table
+    UPDATE employee SET name = 'Stephen' WHERE id = 4;
+
+    -- Delete record(s) from the table
+    DELETE FROM employee WHERE id = 4;
+
+    -- Know more about psql commands from: https://www.geeksforgeeks.org/postgresql-psql-commands/
+    ```
+
+```python
+# program: (PostgreSQL) insert a record in table
+import psycopg2
+
+HOST = '127.0.0.1'
+PORT = '5432'
+DB = 'mydb'
+USER = 'deepjyotib'
+PASS = 'p@ssw0rd#123'
+
+try:
+    conn = psycopg2.connect(host=HOST, port=PORT, database=DB, user=USER, password=PASS)
+    print('Connected to PostgreSQL DB successfully', end='\n\n')
+    cursor = conn.cursor()
+    # We cannot surround values with double quotes (") in PostgreSQL, it must be surrounded by single quotes only
+    cursor.execute("INSERT INTO employee (name, salary) VALUES ('Richard', 9350.50);")
+    conn.commit()
+    print('Record successfully inserted into table')
+except Exception as e:
+    conn.rollback()
+    print(e)
+    print('Record insertion failed')
+finally:
+    cursor.close()
+    conn.close()
+```
+
+```python
+# program: (PostgreSQL) display all the records of a table
+import psycopg2
+
+HOST = '127.0.0.1'
+PORT = '5432'
+DB = 'mydb'
+USER = 'deepjyotib'
+PASS = 'p@ssw0rd#123'
+
+try:
+    conn = psycopg2.connect(host=HOST, port=PORT, database=DB, user=USER, password=PASS)
+    print('Connected to PostgreSQL DB successfully', end='\n\n')
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM employee;")
+    rows = cursor.fetchall()
+    print('Total number of records in the table =', cursor.rowcount)
+    print('Records are:')
+    for row in rows:
+        print(row)
+except Exception as e:
+    conn.rollback()
+    print(e)
+    print('Record insertion failed')
+finally:
+    cursor.close()
+    conn.close()
+```
+
+## Virtual Environment
+
+- In real time one project may need one version of package(s), while other project may need another upgraded version of the same package(s) - maintaining which can be very painful for the developer. That is where virtual environment came in to rescue.
+- virtualenv is used to manage Python packages for different projects. Using virtualenv allows you to avoid installing Python packages globally which could break system tools or other projects.
+- A virtual environment is nothing but a folder within which all the libraries and packages we want to use for a particular project will be installed, instead of having them globally.
+- Command to install virtualenv package globally: `pip3 install virtualenv`
+- Command to create a virtual environment in Mac (Python):`python3 -m venv <venv-dirname>`
+- Command to create a virtual environment in Mac (virtualenv): `virtualenv <venv-dirname>`
+- If you want your virtualenv to also inherit globally installed packages: `virtualenv venv --system-site-packages`
+- Command to use a virtual environent in Mac: `source <venv-dirname>/bin/activate`
+- Command to check whether the virtual environment is in use: `which pip3` (it should point to our local virtual environment directory and then we can install our desired packages using `pip3 install <package-name>`)
+- Command to leave a virtual environment: `deactivate`
+- More deatils on <https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/>
