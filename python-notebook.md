@@ -1,4 +1,4 @@
-# Python3 Cheatsheet
+# Python3 Notebook
 
 ## Python Definition and Features
 
@@ -2948,7 +2948,7 @@ except AssertionError as ae:
 print('After the assertion')                    # After the assertion
 ```
 
-## Files
+## File Handling
 
 - Files are where we organize or store our data.
 - This data could be,
@@ -3057,6 +3057,87 @@ stud = pickle.load(f)
 stud.display()
 
 f.close()
+```
+
+### Context Manager
+
+- Context managers allow us to properly manage resources so that we can specify exactly what we want to set up and tear down when working with certain objects.
+- It is useful for certain cases like,
+  - Opening and closing file objects
+  - Opening and closing database connections
+  - Opening and closing sockets (network) connections
+  - Opening the browser and closing it after the automation tasks are done (using our own custom context manager)
+- We can build our own custom context managers wherever we figure out some tasks to perform to set things up before we run our actual logic and some other teardown tasks to perform right after that (our actual logic).
+- Custom context managers can be created in two ways:
+  - By creating a class
+  - By creating a function and using @contextmanager decorator
+
+```python
+# program: demonstrate the use of inbuilt context managers provided by Python
+# code without context manager
+'''
+try:
+    f = open('sample.txt', 'w')
+    f.write('This file is filled with dummy text')
+    print('Successfully written text into the file')
+finally:
+    f.close()
+'''
+
+# code using context manager
+with open('sample.txt', 'w') as f:
+    f.write('This file is filled with dummy text')
+    print('Successfully written text into the file')
+```
+
+```python
+# program: implement your own context manager using a class
+class OpenFile:
+    def __init__(self, filename, mode):
+        self.filename = filename
+        self.mode = mode
+        
+    def __enter__(self):
+        self.file = open(self.filename, self.mode)
+        return self.file
+
+    def __exit__(self, exc_type, exc_val, traceback):
+        self.file.close()
+
+# when we call OpenFile(), program control inturn calls the __init__ method to initialized the values
+# because OpenFile() was prefixed with 'with' keyword so it then calls the __enter__ method to set things up and returns the file instance
+# now the program control goes within the 'with' block where we write our actual logic / perform necessary action to write into the file
+# finally when the 'with' block is over it then calls to __exit__ method to perform the teardown / cleanup tasks
+with OpenFile('sample.txt', 'w') as f:
+    f.write('This file is filled with dummy text')
+    print('Successfully written text into the file')    # 'Successfully written text into the file'
+
+# check if the file is properly closed
+print(f.closed)                                         # True
+```
+
+```python
+# program: implement your own context manager using a function
+from contextlib import contextmanager
+
+@contextmanager
+def open_file(filename, mode):
+    try:
+        f = open(filename, mode)
+        yield f
+    finally:
+        f.close()
+
+# when we call open_file() program control goes inside the method and execute all the statements before 'yield'
+# because open_file() was prefixed with 'with' keyword so it then executes 'yield' statement which returns the file instance
+# now the program control goes within the 'with' block where we write our actual logic / perform necessary action to write into the file
+# finally when the 'with' block is over it then executes all the statements inside the finally block
+with open_file('sample.txt', 'w') as f:
+    f.write('This file is filled with dummy text')
+    print('Successfully written text into the file')    # 'Successfully written text into the file'
+
+# check if the file is properly closed
+print(f.closed)                                         # True
 ```
 
 ## Regular Expressions
@@ -3910,6 +3991,8 @@ while not q.empty():
 
 ## Networking and Socket Programming
 
+### Basic Networking Tasks
+
 ```python
 # program: download a HTML document from the web
 import urllib.request
@@ -3944,6 +4027,8 @@ except urllib.error.HTTPError:
     print('File download is forbidden')
     exit()
 ```
+
+### Socket Programming
 
 ![Socket Programming](Diagrams/socket-programming.png)
 
@@ -4060,6 +4145,8 @@ while content:
 s.close()
 ```
 
+### Sending Emails
+
 ![Sending Emails](Diagrams/sending-emails.png)
 
 - Before sending an email, you need to do the following settings on the Gmail account that you will be using to send the email:
@@ -4167,6 +4254,8 @@ with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
 ```
 
 ## Database Operations
+
+### Database Operations with MySQL
 
 ![Database Connectivity](Diagrams/database-connectivity.png)
 ![Steps to Connect to a Database](Diagrams/steps-to-connect-to-db.png)
@@ -4399,6 +4488,8 @@ empId = int(input('Enter the employee id: '))
 delete(empId)
 ```
 
+### Database Operations with PostgreSQL
+
 - Install Posgres.app for Mac from: <https://postgresapp.com/downloads.html>
 - To access psql command-line tools, add `/Applications/Postgres.app/Contents/Versions/14/bin/` to your .zshenv (or) .zshrc file.
 - Open Postgres.app > Click on 'Postgres' on the apple menu > Preferences >
@@ -4557,3 +4648,193 @@ finally:
 - Command to check whether the virtual environment is in use: `which pip3` (it should point to our local virtual environment directory and then we can install our desired packages using `pip3 install <package-name>`)
 - Command to leave a virtual environment: `deactivate`
 - More deatils on <https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/>
+
+## Unit Testing
+
+- Unit testing is a software testing method by which individual units of source code are put under various tests to determine whether they are fit for use (Source).
+- It determines and ascertains the quality of your code.
+- Generally, when the development process is complete, the developer codes criteria, or the results that are known to be potentially practical and useful, into the test script to verify a particular unit's correctness.
+- During test case execution, various frameworks log tests that fail any criterion and report them in a summary.
+- Unit testing makes your code future proof since you anticipate the cases where your code could potentially fail or produce a bug. Though you cannot predict all of the cases, you still address most of them.
+- The unit test framework in Python is called unittest, which comes packaged with Python.
+- A unit could be bucketed into various categories:
+  - An entire module.
+  - An individual function.
+  - A complete interface like a class or a method.
+- Python's unit testing framework was inspired by Java's JUnit and has similar features as major unit testing frameworks in other languages. Python's unit testing framework offers various features like:
+  - Test automation
+  - Sharing of setup and shutdown code for tests
+  - Aggregating tests into collections
+  - Independence of the tests from the reporting framework
+- unittest:
+  - If you want to set up some data for your tests and then clean it up after the test runs, that can be done very easily using the life cycle methods called setUp() and tearDown().
+  - The setUp() and tearDown() methods are present in the TestCase class and we override them in our own Test class.
+  - setUp() method is invoked before every test and the tearDown() method is invoked after every test, so that the data of one test will not collide or causes any issues to the other test.
+  - These methods are useful for:
+    - Opening and closing database connections
+    - Opening and closing sockets (networks)
+    - Opening and closing files
+    - Opening and closing browser for test automation
+  - For more details on unittest visit: <https://docs.python.org/3/library/unittest.html>
+
+
+```python
+# program: showcase the usefulness of unit testing via Python's unittest framework for the following function
+# filename: creditcardvalidation.py
+from datetime import *
+
+def validate_card(exp_date):
+    print(exp_date)
+    print(datetime.now().date())
+    if exp_date > datetime.now().date():
+        return 'Valid'
+    else:
+        raise RuntimeError('Your card is expired')
+```
+
+```python
+# program: showcase the usefulness of unit testing via Python's unittest framework for the following function
+# filename: creditcardvalidationtest.py
+import unittest
+from creditcardvalidation import *
+
+class CreditCardValidationTest(unittest.TestCase):
+    def setUp(self):
+        print('\nSetup')
+
+    def test_validate_card_valid(self):
+        result = validate_card(date(2022, 1, 2))
+        self.assertEqual('Valid', result)
+
+    def test_validate_card_expired(self):
+        with self.assertRaises(RuntimeError):
+            validate_card(date(2010, 1, 2))
+
+    def tearDown(self):
+        print('Tear down')
+
+if __name__ == '__main__':
+    unittest.main()
+```
+
+## Additional modules - NumPy
+
+- NumPy comes with various inbuilt classes and functions that will help us to do calculations and also manipulate single and multi-dimensional arrays.
+- All the elements in a NumPy array are of the same type.
+- NumPy provides various functions like linespace(), logspace(), arrange(), zeros(), ones() etc. to work with arrays.
+- It also provides various in-built mathematical functions like sin(), mean(), abs(), min(), sum() etc to do various scientific calculations.
+- We can also compare arrays, perform copy of an array, slicing of arrays, deal with multi-dimensional arrays and matrices with NumPy.
+- NumPy online reference: <https://numpy.org/doc/stable/reference/>
+- NumPy documentations: <https://numpy.org/doc/>
+
+```python
+# program: create and print different type of arrays with numpy
+import numpy as np
+
+# passing the second parameter i.e. dtype is optional
+int_arr = np.array([1, 2, 3, 4, 5])
+float_arr = np.array([1.5, 6.0, 9.3], float)
+str_arr = np.array(['Python', 'Django', 'Flask'], dtype=str)
+
+print(int_arr)
+print(float_arr)
+print(str_arr)
+```
+
+```python
+# program: showcase different additional ways of array creation in numpy
+from numpy import *
+
+# linspace(): takes 3 parameters and returns evenly spaced numbers over a specified interval
+# it does float based calculations and divides the number equally into given number of times
+# third parameter is optional by default the value for it is set to 50
+print('linspace(0, 50) ->', linspace(0, 50), end='\n\n')
+print('linspace(0, 20, 10) ->', linspace(start=0, stop=20, num=10), end='\n\n')
+
+# logspace(): takes 3 parameters and returns numbers spaced evenly on a log scale (logarithmic exponential values)
+# third parameter is optional by default the value for it is set to 50
+print('logspace(0, 50) ->', logspace(0, 50), end='\n\n')
+print('logspace(0, 20, 10) ->', logspace(start=0, stop=20, num=10), end='\n\n')
+
+# arange(): functionality similar to range() function but works only on arrays
+# it takes 3 parameters - start, stop and the step, the third parameter i.e. step is optional one
+print('arange(0, 10) ->', arange(0, 10), end='\n\n')
+print('arange(0, 10, 2) ->', arange(0, 10, 2), end='\n\n')
+print('arange(20, 10, -2) ->', arange(20, 10, -2), end='\n\n')
+
+# zeros(): returns an array filled with zeros
+print('zeros(5) ->', zeros(shape=5), end='\n\n')
+
+# ones(): returns an array filled with ones
+print('ones(5) ->', ones(shape=5), end='\n\n')
+```
+
+```python
+# program: showcase different mathematical functions of the numpy module
+from numpy import *
+
+arr1 = array([1, 2, 3, 4])
+arr2 = array([5, 6, -7, -8])
+
+# add two arrays
+# for array addition both the arrays must be of equal size
+print('arr1 + arr2 ->', arr1 + arr2)
+
+# deduct 2 from all the elements of arr1
+print('arr1 - 2 ->', arr1 - 2)
+
+# sin(): calculates the sign value of each element present in the array
+# similar to this we have cos(), tan() etc.
+print('sin(arr1) ->', sin(arr1))
+
+# log(): calculates the logarithmic value of each element present in the array
+print('log(arr1) ->', log(arr1))
+
+# mean(): returns the mean of all the elements present in the array
+print('mean(arr1) ->', mean(arr1))
+
+# abs(): calculates the absolute value of each element present in the array
+print('abs(arr2) ->', abs(arr2))
+
+# min(): returns the minimum value of the array
+print('min(arr1) ->', min(arr1))
+
+# max(): returns the maximum value of the array
+print('max(arr1) ->', max(arr1))
+
+# sqrt(): calculates the square root of each element present in the array
+print('sqrt(arr1) ->', sqrt(arr1))
+
+# square(): calculates the square of each element present in the array
+print('square(arr1) ->', square(arr1))
+
+# pow(): raises power of each element present in the array by given number
+print('pow(arr1) ->', pow(arr1, 3))
+
+# exp(): calculates the exponent of each element present in the array
+print('exp(arr1) ->', exp(arr1))
+
+# sum(): returns the summation of all the elements present in the array
+print('sum(arr1) ->', sum(arr1))
+```
+
+```python
+# program: showcase how to compare two different arrays using numpy
+from numpy import *
+
+arr1 = array([1, 3, 5, 7, 9])
+arr2 = array([2, 4, 5, 8, 9])
+
+# it compares every element in one array with the corresponding element in the other array
+# for array comparison both the arrays must be of same size, else it will throw ValueError
+print('arr1 > arr2 ->', arr1 > arr2)
+print('arr1 < arr2 ->', arr1 < arr2)
+print('arr1 >= arr2 ->', arr1 >= arr2)
+print('arr1 == arr2 ->', arr1 == arr2)
+
+# any(): if at least for one of the element in these two arrays if the given condition satisfies, it will return true
+print('any(arr1 >= arr2) ->', any(arr1 >= arr2))
+
+# any(): if for all the elements in these two arrays if the given condition satisfies, it will return true
+print('all(arr1 >= arr2) ->', all(arr1 <= arr2))
+```
