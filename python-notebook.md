@@ -2,7 +2,7 @@
 
 ## Table of Contents
 
-- [Python3 Notebook](#python-notebook-python3)
+- [Python Notebook (python3)](#python-notebook-python3)
   - [Overview of Python and its Features](#overview-of-python-and-its-features)
   - [First Python Program to Print 'Hello World'](#first-python-program-to-print-'hello-world')
   - [Comments](#comments)
