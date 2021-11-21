@@ -4723,7 +4723,7 @@ finally:
 - Command to use a virtual environent in Mac: `source <venv-dirname>/bin/activate`
 - Command to check whether the virtual environment is in use: `which pip3` (it should point to our local virtual environment directory and then we can install our desired packages using `pip3 install <package-name>`)
 - Command to leave a virtual environment: `deactivate`
-- More deatils on <https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/>
+- For more details on virtual environments visit: <https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/>
 
 ## Unit Testing
 
