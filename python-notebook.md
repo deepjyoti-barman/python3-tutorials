@@ -1,6 +1,80 @@
-# Python3 Notebook
+# Python Notebook (python3)
 
-## Python Definition and Features
+## Table of Contents
+
+- [Python3 Notebook](#python-notebook-python3)
+  - [Overview of Python and its Features](#overview-of-python-and-its-features)
+  - [First Python Program to Print 'Hello World'](#first-python-program-to-print-'hello-world')
+  - [Comments](#comments)
+  - [Data Types](#data-types)
+    - [Introduction to Data Types](#introduction-to-data-types)
+    - [Numeric Types](#numeric-types)
+    - [Boolean Type](#boolean-type)
+    - [Special Behaviors](#special-behaviors)
+    - [Type Conversion](#type-conversion)
+    - [Rules to Form an Identifier](#rules-to-form-an-identifier)
+    - [List, Set and Dictionary](#list-set-and-dictionary)
+    - [Text Type](#text-type)
+    - [String Manipulation](#string-manipulation)
+    - [Sequence Type - list](#sequence-type---list)
+    - [Sequence Type - tuple](#sequence-type---tuple)
+    - [list vs tuple](#list-vs-tuple)
+    - [Set Types - set and frozenset](#set-types---set-and-frozenset)
+    - [Sequence Type - range](#sequence-type---range)
+    - [Binary Types - bytes and bytearray](#binary-types---bytes-and-bytearray)
+    - [Mapping Type - dict](#mapping-type---dict)
+    - [Immutability in Python](#immutability-in-python)
+    - [Special Types](#special-types)
+  - [Operators and Operands](#operators-and-operands)
+    - [Arithmetic Operators](#arithmetic-operators)
+    - [Assignment Operators](#assignment-operators)
+    - [Comparison Operators](#comparison-operators)
+    - [Logical Operators](#logical-operators)
+    - [Bitwise Operators](#bitwise-operators)
+    - [Membership Operators](#membership-operators)
+    - [Identity Operators](#identity-operators)
+    - [Precedence of Operators](#precedence-of-operators)
+  - [Input and Output Functions](#input-and-output-functions)
+  - [Flow Control Statements](#flow-control-statements)
+    - [if / if..else / if..elif..else](#if--if..else--if..elif..else)
+    - [while loop](#while-loop)
+    - [for loop](#for-loop)
+    - [break](#break)
+    - [continue](#continue)
+    - [assert](#assert)
+    - [pass](#pass)
+    - [return](#return)
+    - [eval](#eval)
+    - [Practice Programs](#practice-programs)
+  - [Command Line Arguments](#command-line-arguments)
+  - [Functions](#functions)
+  - [Lambdas](#lambdas)
+  - [Decorators and Generators](#decorators-and-generators)
+  - [Modules](#modules)
+  - [List Comprehensions](#list-comprehensions)
+  - [Object Oriented Programming in Python](#object-oriented-programming-in-python)
+    - [Encapsulation](#encapsulation)
+    - [Inheritance](#inheritance)
+    - [Polymorphism](#polymorphism)
+    - [Abstraction](#abstraction)
+  - [Exception Handling, Assertions and Logging](#exception-handling-assertions-and-logging)
+  - [File Handling](#file-handling)
+    - [Introduction to File Handling](#introduction-to-file-handling)
+    - [Context Manager](#context-manager)
+  - [Regular Expressions](#regular-expressions)
+  - [Date and Time](#date-and-time)
+  - [Threads](#threads)
+  - [Networking and Socket Programming](#networking-and-socket-programming)
+    - [Basic Networking Tasks](#basic-networking-tasks)
+    - [Socket Programming](#socket-programming)
+    - [Sending Mails](#sending-mails)
+  - [Database Operations](#database-operations)
+    - [Database Operations with MySQL](#database-operations-with-mysql)
+    - [Database Operations with PostgreSQL](#database-operations-with-postgresql)
+  - [Virtual Environment](#virtual-environment)
+  - [Additional Modules - NumPy](#additional-modules---numpy)
+
+## Overview of Python and its Features
 
 - Python is a interpreted, functional and object-oriented programming language.
 - Interpreted = It involves no compilation steps, hence performance of a python application is really fast.
@@ -43,7 +117,7 @@ print('Hello World')
 
 ## Data Types
 
-### Introduction
+### Introduction to Data Types
 
 - A data types tells what type of data a variable can carry.
 - In Python the data types are organized mainly into 7 types:
@@ -2950,6 +3024,8 @@ print('After the assertion')                    # After the assertion
 
 ## File Handling
 
+### Introduction to File Handling
+
 - Files are where we organize or store our data.
 - This data could be,
   - Text data
@@ -4763,10 +4839,11 @@ print('arange(0, 10, 2) ->', arange(0, 10, 2), end='\n\n')
 print('arange(20, 10, -2) ->', arange(20, 10, -2), end='\n\n')
 
 # zeros(): returns an array filled with zeros
+# datatype for all the elements is float by default
 print('zeros(5) ->', zeros(shape=5), end='\n\n')
 
 # ones(): returns an array filled with ones
-print('ones(5) ->', ones(shape=5), end='\n\n')
+print('ones(5) ->', ones(shape=5, dtype=int), end='\n\n')
 ```
 
 ```python
@@ -4837,4 +4914,214 @@ print('any(arr1 >= arr2) ->', any(arr1 >= arr2))
 
 # any(): if for all the elements in these two arrays if the given condition satisfies, it will return true
 print('all(arr1 >= arr2) ->', all(arr1 <= arr2))
+```
+
+```python
+# program: demonstrate advanced functions that works on array comparisons
+from numpy import *
+
+arr1 = array([1, 3, 5, 7, 9])
+arr2 = array([2, 4, 5, 8, 9])
+
+# logical_and(): it can take multiple conditions and checks those conditions against each element of the array
+# an array with boolean values is returned comparing each element against all the conditions specified
+# if an element evaluates True for all the conditions the end result of that element is True in the array
+# if an element evaluates False for at least one of the condition the end result of that element is False in the array
+print('logical_and(arr1 > 1, arr1 < 10) ->', logical_and(arr1 > 1, arr1 < 10))
+
+# logical_or(): it can take multiple conditions and checks those conditions against each element of the array
+# an array with boolean values is returned comparing each element against all the conditions specified
+# if an element evaluates True for at least one of the condition the end result of that element is True in the array
+# if an element evaluates False for all the conditions the end result of that element is False in the array
+print('logical_or(arr1 > 1, arr1 < 10) ->', logical_or(arr1 > 1, arr1 < 10))
+
+# logical_xor(): both conditions are met or unmet - evaluates False, one met and other unmet - evaluates True
+print('logical_xor(arr1 > 1, arr1 < 10) ->', logical_xor(arr1 > 1, arr1 < 10))
+
+# logical_not(): if the condition is met - evaluates False, if the condition is unmet - evaluates True
+print('logical_not(arr1 > 1) ->', logical_not(arr1 > 1))
+
+# where(): takes 3 parameters - condition, return value x if condition is met, return value y if the condition is unmet
+# evaluates the condition against each element of the array
+# the behaviour of the function is similar to ternary operator in other languages
+print('where(arr2 % 2 == 0, arr2, 0) ->', where(arr2 % 2 == 0, arr2, 0))
+print('where(arr1 > arr2, arr1, arr2) ->', where(arr1 > arr2, arr1, arr2))
+```
+
+```python
+# program: demonstrate copy all the element of an array to another (shallow and deep copy)
+from numpy import *
+
+arr1 = arange(1, 10)
+
+# shallow copy
+print('Shallow copy')
+arr2 = arr1.view()
+print('arr1 ->', arr1)
+print('arr2 ->', arr2)
+
+arr2[3] = 99
+print('arr1 ->', arr1)
+print('arr2 ->', arr2)
+
+# Deep copy
+arr3 = arange(10, 20)
+print('\nDeep copy')
+arr4 = arr3.copy()
+print('arr3 ->', arr3)
+print('arr4 ->', arr4)
+
+arr3[3] = 0
+print('arr3 ->', arr3)
+print('arr4 ->', arr4)
+```
+
+```python
+# program: showcase slicing array elements using numpy module
+from numpy import *
+
+arr1 = arange(3, 12)
+print('arr1 ->', arr1)
+
+# starts from x goes till (y - 1)
+print('arr1[3:7] ->', arr1[3:7])
+
+# we can also provide a step value
+print('arr1[3:7:2] ->', arr1[3:7:2])
+
+# starting from x till end
+print('arr1[3:] ->', arr1[3:])
+
+# from the beginning till (y - 1)
+print('arr1[:3] ->', arr1[:3])
+
+# from the beginning till the last but yth element
+print('arr1[:-3] ->', arr1[:-3])
+
+# reverse all the elements of the array
+print('arr1[::-1] ->', arr1[::-1])
+```
+
+```python
+# program: showcase how to work with multidimensional arrays with numpy
+from numpy import *
+
+arr1 = array([1, 2, 3, 4, 5])
+arr2 = array([
+    [1, 2, 3],
+    [3, 4, 6]
+])
+arr3 = array([
+    [
+        [1, 2],
+        [3, 4]
+    ],
+    [
+        [5, 6],
+        [7, 8]
+    ]
+])
+
+print('Arrays are:')
+print('arr1 ->', arr1)
+print('arr2 ->', arr2)
+print('arr3 ->', arr3)
+
+print('\nDimensions of the arrays are:')
+print('arr1.ndim ->', arr1.ndim)
+print('arr2.ndim ->', arr2.ndim)
+print('arr3.ndim ->', arr3.ndim)
+```
+
+```python
+# program: showcase some advanced functions to manipulate and work with multidimensional arrays
+from numpy import *
+
+arr1 = array([1, 2, 3, 4, 5])
+arr2 = array([
+    [1, 2, 3],
+    [3, 4, 6]
+])
+arr3 = array([
+    [
+        [1, 2],
+        [3, 4]
+    ],
+    [
+        [5, 6],
+        [7, 8]
+    ]
+])
+
+print('Arrays are:')
+print('arr1 ->', arr1)
+print('arr2 ->', arr2)
+print('arr3 ->', arr3)
+
+print('\nPrinting the shapes of the arrays:')
+print('arr1.shape ->', arr1.shape)          # arr1.shape -> (5,)
+print('arr2.shape ->', arr2.shape)          # arr2.shape -> (2, 3) [i.e. 2 rows, 3 columns]
+print('arr3.shape ->', arr3.shape)          # arr3.shape -> (2, 2, 2)
+
+print('\nAltering the shape of arr2:')
+arr2.shape = (3, 2)
+print('arr2 ->', arr2)
+
+print('\nPrinting datatype of each element present in the array:')
+print('arr1.dtype ->', arr1.dtype)           # arr1.dtype -> int64
+print('arr2.dtype ->', arr2.dtype)           # arr2.dtype -> int64
+print('arr3.dtype ->', arr3.dtype)           # arr3.dtype -> int64
+
+print('\nPrinting size of each element present in the array:')
+print('arr1.itemsize ->', arr1.itemsize)     # arr1.itemsize -> 8
+print('arr2.itemsize ->', arr2.itemsize)     # arr2.itemsize -> 8
+print('arr3.itemsize ->', arr3.itemsize)     # arr3.itemsize -> 8
+
+print('\nPrinting overall size of the array:')
+print('arr1.nbytes ->', arr1.nbytes)        # arr1.nbytes -> 40
+print('arr2.nbytes ->', arr2.nbytes)        # arr2.nbytes -> 48
+print('arr3.nbytes ->', arr3.nbytes)        # arr3.nbytes -> 64
+```
+
+```python
+# program: showcase the functions for array shape conversions
+from numpy import *
+
+arr1 = arange(12)
+print('arr1 ->', arr1)
+
+# reshape(): changes the shapes of the array i.e. converts single to multidimensional array and vice versa
+# multiplication of row and column values should be equal to size of the array else it will throw an error
+print('\n1D to 2D:')
+arr2 = reshape(arr1, (4, 3))
+print('arr2 ->', arr2)
+
+print('\n2D to 1D:')
+arr3 = reshape(arr2, 12)
+print('arr3 ->', arr3)
+
+print('\n1D to 3D:')
+arr4 = reshape(arr1, (2, 2, 3))
+print('arr4 ->', arr4)
+
+# flatten(): converts a multidimensional array to linear / single dimensional array
+print('\narr3.flatten() ->', arr3.flatten())
+
+# eye(N, M, k, dtype, order, like): creates a 2D array with ones at the diagonal and zeros elsewhere
+# N (mandatory): number of rows
+# M : number of columns, N by default
+# k : index of the diagonal, 0 by default
+# dtype : data type of the elements, float by default
+# order : ordering of the elements - row manjor ('C' for C style - C), column major ('F' for Fortran style)
+# like : None
+print('\neye(2) ->', eye(2))
+print('\neye(3, 2, dtype=int) ->', eye(3, 4, k=1, dtype=int))
+
+# zeros(): returns an array filled with zeros
+# datatype of all the elements is float by default
+# an extra pair of parenthesis is required to create multidimensional arrays as shown below
+print('\nzeros((3, 2)) ->', zeros((3, 2)))
+
+# ones(): returns an array filled with ones
+print('\nones((2, 3), dtype=int) ->', ones((2, 3), dtype=int))
 ```
