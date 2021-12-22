@@ -67,7 +67,7 @@
   - [Networking and Socket Programming](#networking-and-socket-programming)
     - [Basic Networking Tasks](#basic-networking-tasks)
     - [Socket Programming](#socket-programming)
-    - [Sending Mails](#sending-mails)
+    - [Sending Emails](#sending-emails)
   - [Database Operations](#database-operations)
     - [Database Operations with MySQL](#database-operations-with-mysql)
     - [Database Operations with PostgreSQL](#database-operations-with-postgresql)
