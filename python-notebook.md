@@ -5125,3 +5125,143 @@ print('\nzeros((3, 2)) ->', zeros((3, 2)))
 # ones(): returns an array filled with ones
 print('\nones((2, 3), dtype=int) ->', ones((2, 3), dtype=int))
 ```
+
+## Competitive Programming Essentials
+
+### 1-D Array/List
+
+- Initialize an array of predefined size (Zero-fill):
+
+  ```python
+  arr = [0] * size
+  ```
+
+- Initialize an array of predefined size (None-fill):
+
+  ```python
+  arr = [None] * size
+  ```
+
+- Initialize an array of predefined size (Zero-fill):
+
+  ```python
+  arr = [0 for i in range(size)]
+  ```
+
+- Initialize an array of predefined size (using numpy module, None-fill):
+
+  ```python
+  arr = numpy.empty(size, dtype=int)
+  ```
+
+- Initialize an array of predefined size (using numpy module, Zero-fill):
+
+  ```python
+  arr = numpy.zeros(size, dtype=int)
+  ```
+
+- Initialize an array of predefined size (using numpy module, One-fill):
+
+  ```python
+  arr = numpy.ones(size, dtype=int)
+  ```
+
+- Append an element at the end of array:
+
+  ```python
+  arr = []
+  arr.append(10)
+  ```
+
+- Maximum element in an array:
+
+  ```python
+  max(arr)
+  ```
+
+- Minimum element in an array:
+
+  ```python
+  min(arr)
+  ```
+
+### 2-D Array/List
+
+- NOTE: Never use these following techniques to create arrays:
+
+  ```python
+  # Technique 1
+  arr = [[0] * col] * row
+  
+  # As this puts the same element in all three rows in the container list
+  arr = [[0] * 2] * 2         # creating a 2x2 matrix
+  print(arr)                  # [[0, 0], [0, 0]]
+  arr[0][0] = 1
+  print(arr)                  # [[1, 0], [1, 0]]
+  ```
+
+  ```python
+  # Technique 2
+  B. arr = [[]] * row
+
+  # As this puts the same element in all three rows in the container list:
+  arr = [[]] * 2
+  print(arr)                    # [[], []]
+  arr[0].append(1)
+  print(arr)                    # [[1], [1]]
+  ```
+
+- Initialize an array of predefined size (Zero-fill):
+
+  ```python
+  # NOTE: _ can be the name of a variable in Python (e.g. _ = 2)
+  arr = [[0 for _ in range(col)] for _ in range(row)]
+  ```
+
+- Initialize an array of predefined size (using numpy module, Zero-fill):
+
+  ```python
+  arr = numpy.zeros((row, col), dtype=int)
+  ```
+
+- Append an element at the end of array (first-approach):
+
+  ```python
+  arr = []
+  arr.append([])
+  arr[0].append(1)
+  arr[0].append(2)
+  arr[0].append(3)
+  arr.append([])
+  arr[1].append(4)
+  arr[1].append(5)
+  arr[1].append(6)
+  arr.append([7, 8, 9])
+  print(arr)                # [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+  ```
+
+- Append an element at the end of array (second-approach):
+
+  ```python
+  # arr = [[], []]                      # direct assignment
+  # arr = [[] for _ in range(n)]        # creating an 2-D array with n rows
+  arr = [[] for _ in range(2)]
+  print(arr)                            # [[], []]
+  arr[0].append(1)
+  arr[0].append(2)
+  arr[1].append(3)
+  arr[1].append(4)
+  ```
+
+- Maximum element in an array:
+
+  ```python
+  max(max(x) for x in arr)      # from each row get the maximum element, then select the maximum among them (generator object)
+  max([max(x) for x in arr])    # from each row get the maximum element, then select the maximum among them (list object)
+  ```
+
+- Minimum element in an array:
+
+  ```python
+  min(min(y) for y in arr)
+  ```
