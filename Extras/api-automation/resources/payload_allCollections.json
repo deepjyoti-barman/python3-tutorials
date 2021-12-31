@@ -1,0 +1,25 @@
+{
+  "initial": true,
+  "showJit": true,
+  "filter": {
+    "location": null,
+    "city": "CTBLR"
+  },
+  "schema": "id`ct`tt`pu`ul`rw`rh`di`dn`ui`un`pc`pt`ci`cp`dp`qt`tg`tl`gr`wl`dur`diul`cra`uim`vt",
+  "delimiter": "`",
+  "onboarding": false,
+  "searchLobData": "{\"searchEvents\":\"{}\"}",
+  "supColTypes": [
+    "42",
+    "43",
+    "51",
+    "52",
+    "55",
+    "56",
+    "58",
+    "72",
+    "73"
+  ],
+  "showRecentlyViewed": true,
+  "timestamp": 1627481255671
+}

@@ -1,0 +1,13 @@
+{
+  "accept": "application/json",
+  "content-type": "application/json",
+  "currency": "inr",
+  "deviceId": "9be8dccb593e5c31",
+  "ipaddress": "192.168.29.93",
+  "language": "eng",
+  "region": "in",
+  "os": "Android 9",
+  "user-agent": "MakeMyTrip/8.6.4 (Android 9; Build/PKQ1.180904.001)",
+  "ver": "8.6.4",
+  "vid": "vid"
+}
