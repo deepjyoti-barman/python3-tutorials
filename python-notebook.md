@@ -71,6 +71,7 @@
   - [Database Operations](#database-operations)
     - [Database Operations with MySQL](#database-operations-with-mysql)
     - [Database Operations with PostgreSQL](#database-operations-with-postgresql)
+    - [Database Operations with MongoDB](#database-operations-with-mongodb)
   - [Virtual Environment](#virtual-environment)
   - [Additional Modules - NumPy](#additional-modules---numpy)
 
@@ -4711,6 +4712,339 @@ finally:
     conn.close()
 ```
 
+### Database Operations with MongoDB
+
+- In typical relational databases like Oracle, MySQL and Microsoft SQL Server the data is stored in the form of tables, with columns and rows in a structured fashion. Each table will have a relationship with the other table as required.
+- In case of unstructured databases like MongoDB, it stores the data in form of collections - in JSON like format (key-value pairs). No rows, no columns, no tables just simple collections. Each collection can have multiple documents (rows/records in sql database) and with in the document there will be key and value pairs of data.
+- MongoDB stores data records as BSON documents. BSON is a binary representation of JSON documents, though it contains more data types than JSON. The value of a field can be any of the BSON data types, including other documents, arrays, and arrays of documents.
+- `mongod` is the command we use to start the server.
+- `mongo` (obsolete) or `mongosh` command we use to connect to the server from a command line client called Mongo Shell.
+- The MongoDB server by default starts on port 27017.
+
+```python
+# program: create a MongoDB database and a collection and within the collection insert a documents
+from pymongo import MongoClient
+
+host = 'localhost'
+port = 27017
+db_name = 'mydb'
+coll_name = 'product'
+
+# connect to the MongoDB database using MongoClient
+client = MongoClient(host, port)
+
+# create the database if it does not exist, else use the existing one
+database = client[db_name]
+print('Database created:', db_name)
+
+# create the collection if it does not exist, else use the existing one
+collection = database[coll_name]
+print('Collection created:', coll_name)
+
+product = {
+    'name': 'iPhone',
+    'price': 1000
+}
+
+result = collection.insert_one(product)
+print('ID of the document inserted:', result.inserted_id)
+```
+
+```log
+Database created: mydb
+Collection created: product
+ID of the document inserted: 61eae0b6203c26fc276784c2
+```
+
+```python
+# program: insert multiple documents in a MongoDB collection
+from pymongo import MongoClient
+
+host = 'localhost'
+port = 27017
+db_name = 'mydb'
+coll_name = 'product'
+
+# connect to the MongoDB database using MongoClient
+client = MongoClient(host, port)
+
+# create the database if it does not exist, else use the existing one
+database = client[db_name]
+print('Connected to database:', db_name)
+
+# create the collection if it does not exist, else use the existing one
+collection = database[coll_name]
+print('Using collection:', coll_name)
+
+products = [{
+    'name': 'MacBook Air',
+    'price': 1500
+}, {
+    'name': 'MacBook Pro',
+    'price': 2000
+}, {
+    'name': 'iPad Air',
+    'price': 750
+}, {
+    'name': 'iPad Pro',
+    'price': 1000
+}]
+
+result = collection.insert_many(products)
+print('IDs of the documents inserted:', result.inserted_ids)
+```
+
+```log
+Connected to database: mydb
+Using collection: product
+IDs of the documents inserted: [ObjectId('61eae13737c852590a986d51'), ObjectId('61eae13737c852590a986d52'), ObjectId('61eae13737c852590a986d53'), ObjectId('61eae13737c852590a986d54')]
+```
+
+```python
+# program: find and read documents as per your need from a collection in MongoDB
+from pymongo import MongoClient
+
+host = 'localhost'
+port = 27017
+db_name = 'mydb'
+coll_name = 'product'
+
+# connect to the MongoDB database using MongoClient
+client = MongoClient(host, port)
+
+# create the database if it does not exist, else use the existing one
+database = client[db_name]
+print('Connected to database:', db_name)
+
+# create the collection if it does not exist, else use the existing one
+collection = database[coll_name]
+print('Using collection:', coll_name)
+
+# find and display a single document
+print('\nResult of find_one() in MongoDB:')
+print(collection.find_one())
+
+# find and display all the documents present in the collection
+print('\nResult of find() in MongoDB:')
+cursor1 = collection.find()
+count = 0
+
+for document in cursor1:
+    print(document)
+    count = count + 1
+print(f'Number of documents present in collection {coll_name}: {count}')
+
+# find and display some specific document from the collection
+print('\nResult of find() applying filter in MongoDB:')
+cursor2 = collection.find({'price': 1000})
+
+while True:
+    try:
+        print(cursor2.next())
+    except StopIteration:
+        break
+```
+
+```log
+Connected to database: mydb
+Using collection: product
+
+Result of find_one() in MongoDB:
+{'_id': ObjectId('61eae0b6203c26fc276784c2'), 'name': 'iPhone', 'price': 1000}
+
+Result of find() in MongoDB:
+{'_id': ObjectId('61eae0b6203c26fc276784c2'), 'name': 'iPhone', 'price': 1000}
+{'_id': ObjectId('61eae13737c852590a986d51'), 'name': 'MacBook Air', 'price': 1500}
+{'_id': ObjectId('61eae13737c852590a986d52'), 'name': 'MacBook Pro', 'price': 2000}
+{'_id': ObjectId('61eae13737c852590a986d53'), 'name': 'iPad Air', 'price': 750}
+{'_id': ObjectId('61eae13737c852590a986d54'), 'name': 'iPad Pro', 'price': 1000}
+Number of documents present in collection product: 5
+
+Result of find() applying filter in MongoDB:
+{'_id': ObjectId('61eae0b6203c26fc276784c2'), 'name': 'iPhone', 'price': 1000}
+{'_id': ObjectId('61eae13737c852590a986d54'), 'name': 'iPad Pro', 'price': 1000}
+```
+
+```python
+# program: find and update a document as per your need from a collection in MongoDB
+from pymongo import MongoClient
+
+host = 'localhost'
+port = 27017
+db_name = 'mydb'
+coll_name = 'product'
+
+# connect to the MongoDB database using MongoClient
+client = MongoClient(host, port)
+
+# create the database if it does not exist, else use the existing one
+database = client[db_name]
+print('Connected to database:', db_name)
+
+# create the collection if it does not exist, else use the existing one
+collection = database[coll_name]
+print('Using collection:', coll_name)
+
+result = collection.update_one({'name': 'iPad Air'}, {'$set': {'price': 800}})
+print('Result of update:', result.raw_result)
+print('No of document matched by the filter applied:', result.matched_count)
+# if the value we want to set to the filtered document is same as its existing value
+# the document will remain unmodified and cursor.matched_count won't be increased
+print('No of document modified:', result.modified_count)
+
+# view the change in the document
+print('\nShowcasing the document after the update:')
+cursor = collection.find({'name': 'iPad Air'})
+for document in cursor:
+    print(document)
+```
+
+```log
+Connected to database: mydb
+Using collection: product
+Result of update: {'n': 1, 'nModified': 1, 'ok': 1.0, 'updatedExisting': True}
+No of document matched by the filter applied: 1
+No of document modified: 1
+
+Showcasing the document after the update:
+{'_id': ObjectId('61eae13737c852590a986d53'), 'name': 'iPad Air', 'price': 800}
+```
+
+```python
+# program: find and update multiple documents as per your need from a collection in MongoDB
+from pymongo import MongoClient
+
+host = 'localhost'
+port = 27017
+db_name = 'mydb'
+coll_name = 'product'
+
+# connect to the MongoDB database using MongoClient
+client = MongoClient(host, port)
+
+# create the database if it does not exist, else use the existing one
+database = client[db_name]
+print('Connected to database:', db_name)
+
+# create the collection if it does not exist, else use the existing one
+collection = database[coll_name]
+print('Using collection:', coll_name)
+
+result = collection.update_many({'price': 1000}, {'$set': {'price': 1050}})
+print('Result of update:', result.raw_result)
+print('No of document(s) matched by the filter applied:', result.matched_count)
+# if the value we want to set to the filtered documents is same as its existing value
+# the documents will remain unmodified and cursor.matched_count won't be increased
+print('No of document(s) modified:', result.modified_count)
+
+# view the changes in the documents
+print('\nShowcasing the products having price = 1000:')
+cursor = collection.find({'price': 1000})
+for document in cursor:
+    print(document)
+
+print('\nShowcasing the products having price = 1050:')
+cursor = collection.find({'price': 1050})
+for document in cursor:
+    print(document)
+```
+
+```log
+Connected to database: mydb
+Using collection: product
+Result of update: {'n': 2, 'nModified': 2, 'ok': 1.0, 'updatedExisting': True}
+No of document(s) matched by the filter applied: 2
+No of document(s) modified: 2
+
+Showcasing the products having price = 1000:
+
+Showcasing the products having price = 1050:
+{'_id': ObjectId('61eae0b6203c26fc276784c2'), 'name': 'iPhone', 'price': 1050}
+{'_id': ObjectId('61eae13737c852590a986d54'), 'name': 'iPad Pro', 'price': 1050}
+```
+
+```python
+# program: find and delete a document as per your need from a collection in MongoDB
+from pymongo import MongoClient
+
+host = 'localhost'
+port = 27017
+db_name = 'mydb'
+coll_name = 'product'
+
+# connect to the MongoDB database using MongoClient
+client = MongoClient(host, port)
+
+# create the database if it does not exist, else use the existing one
+database = client[db_name]
+print('Connected to database:', db_name)
+
+# create the collection if it does not exist, else use the existing one
+collection = database[coll_name]
+print('Using collection:', coll_name)
+
+result = collection.delete_one({'name': 'MacBook Pro'})
+print('Result of deletion:', result.raw_result)
+print('No of document deleted:', result.deleted_count)
+
+# find the availability of the document which got deleted
+print('\nFind the document after the deletion to verify:')
+cursor = collection.find({'name': 'MacBook Pro'})
+for document in cursor:
+    print(document)
+```
+
+```log
+Connected to database: mydb
+Using collection: product
+Result of deletion: {'n': 1, 'ok': 1.0}
+No of document deleted: 1
+
+Find the document after the deletion to verify:
+
+```
+
+```python
+# program: find and delete multiple documents as per your need from a collection in MongoDB
+from pymongo import MongoClient
+
+host = 'localhost'
+port = 27017
+db_name = 'mydb'
+coll_name = 'product'
+
+# connect to the MongoDB database using MongoClient
+client = MongoClient(host, port)
+
+# create the database if it does not exist, else use the existing one
+database = client[db_name]
+print('Connected to database:', db_name)
+
+# create the collection if it does not exist, else use the existing one
+collection = database[coll_name]
+print('Using collection:', coll_name)
+
+result = collection.delete_many({'price': 1050})
+print('Result of deletion:', result.raw_result)
+print('No of document(s) deleted:', result.deleted_count)
+
+# find the availability of the document which got deleted
+print('\nFind the document after the deletion to verify:')
+cursor = collection.find({'price': 1050})
+for document in cursor:
+    print(document)
+```
+
+```log
+Connected to database: mydb
+Using collection: product
+Result of deletion: {'n': 2, 'ok': 1.0}
+No of document(s) deleted: 2
+
+Find the document after the deletion to verify:
+
+```
+
 ## Virtual Environment
 
 - In real time one project may need one version of package(s), while other project may need another upgraded version of the same package(s) - maintaining which can be very painful for the developer. That is where virtual environment came in to rescue.
@@ -5265,3 +5599,5 @@ print('\nones((2, 3), dtype=int) ->', ones((2, 3), dtype=int))
   ```python
   min(min(y) for y in arr)
   ```
+
+

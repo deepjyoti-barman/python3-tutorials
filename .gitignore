@@ -135,3 +135,6 @@ Thumbs.db
 
 # PyCharm project config files
 .idea
+
+# VSCode workspace config files
+.vscode
